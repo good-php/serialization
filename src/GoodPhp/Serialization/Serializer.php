@@ -2,6 +2,7 @@
 
 namespace GoodPhp\Serialization;
 
+use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Reflector\Reflector;
 use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\Type;
@@ -26,7 +27,7 @@ final class Serializer
 	 *
 	 * @return A
 	 */
-	public function adapter(string $typeAdapterType, Type|string $type, array $attributes = [], TypeAdapterFactory $skipPast = null): TypeAdapter
+	public function adapter(string $typeAdapterType, Type|string $type, Attributes $attributes = new Attributes(), TypeAdapterFactory $skipPast = null): TypeAdapter
 	{
 		if (is_string($type)) {
 			$type = new NamedType($type);

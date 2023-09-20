@@ -10,6 +10,7 @@ use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\PrimitiveType;
 use GoodPhp\Reflection\Type\Special\NullableType;
 use GoodPhp\Reflection\Type\Type;
+use GoodPhp\Serialization\MissingValue;
 use GoodPhp\Serialization\SerializerBuilder;
 use GoodPhp\Serialization\TypeAdapter\Exception\CollectionItemMappingException;
 use GoodPhp\Serialization\TypeAdapter\Exception\MultipleMappingException;
@@ -19,9 +20,6 @@ use GoodPhp\Serialization\TypeAdapter\Json\JsonTypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\PropertyMappingException;
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\TestCase;
-use function TenantCloud\Standard\Optional\empty_optional;
-use TenantCloud\Standard\Optional\Optional;
-use function TenantCloud\Standard\Optional\optional;
 use Tests\Stubs\BackedEnumStub;
 use Tests\Stubs\ClassStub;
 use Tests\Stubs\NestedStub;
@@ -110,14 +108,6 @@ class JsonSerializationTest extends TestCase
 			'"one"',
 		];
 
-		yield 'optional of value enum' => [
-			new NamedType(Optional::class, new Collection([
-				new NamedType(ValueEnumStub::class),
-			])),
-			optional(ValueEnumStub::$TWO),
-			'"two"',
-		];
-
 		yield 'array of DateTime' => [
 			PrimitiveType::array(
 				new NamedType(DateTime::class)
@@ -149,10 +139,11 @@ class JsonSerializationTest extends TestCase
 				1,
 				new NestedStub(),
 				new DateTime('2020-01-01 00:00:00'),
-				optional(123),
 				123,
+				123,
+				MissingValue::INSTANCE,
 			),
-			'{"primitive":1,"nested":{"field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123}',
 		];
 
 		yield 'ClassStub with empty optional and null nullable' => [
@@ -166,10 +157,11 @@ class JsonSerializationTest extends TestCase
 				1,
 				new NestedStub(),
 				new DateTime('2020-01-01 00:00:00'),
-				empty_optional(),
+				MissingValue::INSTANCE,
 				null,
+				MissingValue::INSTANCE,
 			),
-			'{"primitive":1,"nested":{"field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null}',
 		];
 	}
 
@@ -259,14 +251,6 @@ class JsonSerializationTest extends TestCase
 			'"one"',
 		];
 
-		yield 'optional of value enum' => [
-			new NamedType(Optional::class, new Collection([
-				new NamedType(ValueEnumStub::class),
-			])),
-			optional(ValueEnumStub::$TWO),
-			'"two"',
-		];
-
 		yield 'array of DateTime' => [
 			PrimitiveType::array(
 				new NamedType(DateTime::class)
@@ -298,10 +282,11 @@ class JsonSerializationTest extends TestCase
 				1,
 				new NestedStub(),
 				new DateTime('2020-01-01 00:00:00'),
-				optional(123),
 				123,
+				123,
+				MissingValue::INSTANCE,
 			),
-			'{"primitive":1,"nested":{"field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123}',
 		];
 
 		yield 'ClassStub with empty optional and null nullable' => [
@@ -315,10 +300,11 @@ class JsonSerializationTest extends TestCase
 				1,
 				new NestedStub(),
 				new DateTime('2020-01-01 00:00:00'),
-				empty_optional(),
+				MissingValue::INSTANCE,
 				null,
+				MissingValue::INSTANCE,
 			),
-			'{"primitive":1,"nested":{"field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null}',
 		];
 
 		yield 'ClassStub with the least default fields' => [
@@ -332,8 +318,9 @@ class JsonSerializationTest extends TestCase
 				1,
 				new NestedStub(),
 				new DateTime('2020-01-01 00:00:00'),
-				empty_optional(),
+				MissingValue::INSTANCE,
 				null,
+				MissingValue::INSTANCE,
 			),
 			'{"primitive":1,"nested":{},"date":"2020-01-01T00:00:00.000+00:00"}',
 		];
@@ -485,18 +472,18 @@ class JsonSerializationTest extends TestCase
 					new NamedType(DateTime::class),
 				])
 			),
-			'{"primitive":"1","nested":{"field":"something"},"date":"2020-01-01T00:00:00.000+00:00"}',
+			'{"primitive":"1","nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00"}',
 		];
 
 		yield 'ClassStub with wrong nested field type' => [
-			new PropertyMappingException('nested.field', new UnexpectedValueTypeException(123, PrimitiveType::string())),
+			new PropertyMappingException('nested.Field', new UnexpectedValueTypeException(123, PrimitiveType::string())),
 			new NamedType(
 				ClassStub::class,
 				new Collection([
 					new NamedType(DateTime::class),
 				])
 			),
-			'{"primitive":1,"nested":{"field":123},"date":"2020-01-01T00:00:00.000+00:00","nullable":null}',
+			'{"primitive":1,"nested":{"Field":123},"date":"2020-01-01T00:00:00.000+00:00","nullable":null}',
 		];
 	}
 }

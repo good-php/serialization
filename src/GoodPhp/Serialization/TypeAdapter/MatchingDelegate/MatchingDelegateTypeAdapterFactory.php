@@ -3,6 +3,7 @@
 namespace GoodPhp\Serialization\TypeAdapter\MatchingDelegate;
 
 use Closure;
+use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
@@ -22,7 +23,7 @@ final class MatchingDelegateTypeAdapterFactory implements TypeAdapterFactory
 	) {
 	}
 
-	public function create(string $typeAdapterType, Type $type, array $attributes, Serializer $serializer): ?TypeAdapter
+	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?TypeAdapter
 	{
 		if ($typeAdapterType !== $this->typeAdapterType) {
 			return null;
@@ -32,7 +33,7 @@ final class MatchingDelegateTypeAdapterFactory implements TypeAdapterFactory
 			return null;
 		}
 
-		if (!array_filter($attributes, fn (object $attribute) => is_a($attribute, $this->attribute, true))) {
+		if (!$attributes->has($this->attribute)) {
 			return null;
 		}
 

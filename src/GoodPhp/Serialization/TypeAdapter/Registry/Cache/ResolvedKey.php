@@ -3,19 +3,17 @@
 namespace GoodPhp\Serialization\TypeAdapter\Registry\Cache;
 
 use Ds\Hashable;
+use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 use RuntimeException;
 
 final class ResolvedKey implements Hashable
 {
-	/**
-	 * @param object[] $attributes
-	 */
 	public function __construct(
 		public readonly string $typeAdapterType,
 		public readonly Type $type,
-		public readonly array $attributes,
+		public readonly Attributes $attributes,
 		public readonly ?TypeAdapterFactory $skipPast
 	) {
 	}
@@ -39,7 +37,7 @@ final class ResolvedKey implements Hashable
 		/* @noinspection TypeUnsafeComparisonInspection */
 		return $this->typeAdapterType === $obj->typeAdapterType &&
 			$this->type->equals($obj->type) &&
-			$this->attributes == $obj->attributes &&
+			$this->attributes->equals($obj->attributes) &&
 			$this->skipPast === $obj->skipPast;
 	}
 }

@@ -2,9 +2,10 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming;
 
-use Illuminate\Support\Collection;
+use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
+use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
 
 interface NamingStrategy
 {
-	public function translate(string $name, Collection $attributes, Collection $classAttributes): string;
+	public function translate(PropertyReflection $property): string;
 }

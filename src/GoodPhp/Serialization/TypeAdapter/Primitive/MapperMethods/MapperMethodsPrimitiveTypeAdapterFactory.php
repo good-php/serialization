@@ -3,6 +3,7 @@
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods;
 
 use Closure;
+use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
@@ -29,7 +30,7 @@ final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFacto
 		assert($this->toMappers || $this->fromMappers);
 	}
 
-	public function create(string $typeAdapterType, Type $type, array $attributes, Serializer $serializer): ?TypeAdapter
+	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?TypeAdapter
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NamedType) {
 			return null;
@@ -65,9 +66,8 @@ final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFacto
 
 	/**
 	 * @param Collection<int, MapperMethod> $mappers
-	 * @param object[]                      $attributes
 	 */
-	private function findMapper(Collection $mappers, NamedType $type, array $attributes, Serializer $serializer): ?MapperMethod
+	private function findMapper(Collection $mappers, NamedType $type, Attributes $attributes, Serializer $serializer): ?MapperMethod
 	{
 		return $mappers
 			->filter(

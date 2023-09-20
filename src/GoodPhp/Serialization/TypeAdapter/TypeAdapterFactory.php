@@ -2,6 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter;
 
+use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
 
@@ -12,9 +13,8 @@ interface TypeAdapterFactory
 {
 	/**
 	 * @param class-string<TypeAdapter> $typeAdapterType
-	 * @param object[]                  $attributes
 	 *
 	 * @return T|null
 	 */
-	public function create(string $typeAdapterType, Type $type, array $attributes, Serializer $serializer);
+	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer);
 }

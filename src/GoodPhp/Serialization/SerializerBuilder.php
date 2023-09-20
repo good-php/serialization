@@ -5,6 +5,7 @@ namespace GoodPhp\Serialization;
 use GoodPhp\Reflection\Reflector\Reflector;
 use GoodPhp\Reflection\ReflectorBuilder;
 use GoodPhp\Reflection\Type\Type;
+use GoodPhp\Serialization\Hydration\ConstructorHydrator;
 use GoodPhp\Serialization\TypeAdapter\Json\FromPrimitiveJsonTypeAdapterFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\ArrayMapper;
 use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\BackedEnumMapper;
@@ -12,7 +13,6 @@ use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\DateTimeMapper;
 use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\Nullable\NullableTypeAdapterFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\ScalarMapper;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\ClassPropertiesPrimitiveTypeAdapterFactory;
-use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Constructing\NoConstructorPropertySetObjectFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\BuiltInNamingStrategy;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\NamingStrategy;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\SerializedNameAttributeNamingStrategy;
@@ -113,11 +113,10 @@ final class SerializerBuilder
 			->addMapperLast(new ValueEnumMapper())
 			->addMapperLast(new ArrayMapper())
 			->addMapperLast(new CollectionMapper())
-			->addMapperLast(new OptionalMapper())
 			->addMapperLast(new DateTimeMapper())
 			->addFactoryLast(new ClassPropertiesPrimitiveTypeAdapterFactory(
 				new SerializedNameAttributeNamingStrategy($this->namingStrategy ?? BuiltInNamingStrategy::PRESERVING),
-				new NoConstructorPropertySetObjectFactory(),
+				new ConstructorHydrator(),
 				new DefaultBoundClassPropertyFactory(),
 			))
 			->addFactoryLast(new FromPrimitiveJsonTypeAdapterFactory());

@@ -2,7 +2,9 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming;
 
-use Illuminate\Support\Collection;
+use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
+use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
+use Illuminate\Support\Arr;
 use Webmozart\Assert\Assert;
 
 class SerializedNameAttributeNamingStrategy implements NamingStrategy
@@ -11,26 +13,35 @@ class SerializedNameAttributeNamingStrategy implements NamingStrategy
 	{
 	}
 
-	public function translate(string $name, Collection $attributes, Collection $classAttributes): string
+	public function translate(PropertyReflection $property): string
 	{
-		/** @var SerializedName|null $attribute */
-		$attribute = $attributes->first(fn (object $attribute) => $attribute instanceof SerializedName);
+		$serializedName = $this->findSerializedName($property);
 
-		if (!$attribute) {
-			/** @var SerializedName|null $attribute */
-			$attribute = $classAttributes->first(fn (object $attribute) => $attribute instanceof SerializedName);
-
-			Assert::true(!$attribute || $attribute->nameOrStrategy instanceof NamingStrategy, 'Class applied #[SerializedName] must provide a naming strategy rather than a string name.');
+		if (!$serializedName) {
+			return $this->fallback->translate($property);
 		}
 
-		if (!$attribute) {
-			return $this->fallback->translate($name, $attributes, $classAttributes);
+		if ($serializedName->nameOrStrategy instanceof NamingStrategy) {
+			return $serializedName->nameOrStrategy->translate($property);
 		}
 
-		if ($attribute->nameOrStrategy instanceof NamingStrategy) {
-			return $attribute->nameOrStrategy->translate($name, $attributes, $classAttributes);
+		return $serializedName->nameOrStrategy;
+	}
+
+	private function findSerializedName(PropertyReflection $property): ?SerializedName
+	{
+		$serializedName = $property->attributes()->sole(SerializedName::class);
+
+		if (!$serializedName) {
+			$serializedName = $property->owner->attributes()->sole(SerializedName::class);
+
+			Assert::nullOrIsInstanceOf(
+				$serializedName?->nameOrStrategy,
+				NamingStrategy::class,
+				'Class applied #[SerializedName] must provide a naming strategy rather than a string name.'
+			);
 		}
 
-		return $attribute->nameOrStrategy;
+		return $serializedName;
 	}
 }

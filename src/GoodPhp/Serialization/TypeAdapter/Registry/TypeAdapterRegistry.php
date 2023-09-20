@@ -2,6 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Registry;
 
+use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
@@ -13,9 +14,8 @@ interface TypeAdapterRegistry
 	 * @template TypeAdapterType
 	 *
 	 * @param class-string<TypeAdapterType> $typeAdapterType
-	 * @param object[]                      $attributes
 	 *
 	 * @return TypeAdapterType
 	 */
-	public function forType(string $typeAdapterType, Serializer $serializer, Type $type, array $attributes = [], TypeAdapterFactory $skipPast = null): TypeAdapter;
+	public function forType(string $typeAdapterType, Serializer $serializer, Type $type, Attributes $attributes = new Attributes(), TypeAdapterFactory $skipPast = null): TypeAdapter;
 }

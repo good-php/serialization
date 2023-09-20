@@ -12,7 +12,6 @@ This is what it can serialize and deserialize out-of-the-box:
 class Item
 {
 	/**
-	 * @param Optional<int|null> $optional
 	 * @param BackedEnumStub[] $array
 	 * @param Collection<int, T1>
 	 * @param T1 $generic
@@ -26,7 +25,7 @@ class Item
 		public readonly bool $bool,
 		// Nullable and optional values
 		public readonly ?string $nullableString,
-		public readonly Optional $optional,
+		public readonly int|null|MissingValue $optional,
 		// Custom property names
 		#[SerializedName('two')] public readonly string $one,
 		// Backed enums
@@ -49,64 +48,81 @@ You can then convert it into a "primitive" (scalars and arrays of scalars) or JS
 ```php
 $primitiveAdapter = $serializer->adapter(
 	PrimitiveTypeAdapter::class, 
-	new NamedType(Item::class, [new NamedType(Carbon::class)])
+	NamedType::wrap(Item::class, [Carbon::class])
 );
 $primitiveAdapter->serialize(new Item(...)) // -> ['int' => 123, ...]
 
 $jsonAdapter = $serializer->adapter(
 	JsonTypeAdapter::class, 
-	new NamedType(Item::class, [PrimitiveType::int()])
+	NamedType::wrap(Item::class, [PrimitiveType::int()])
 );
 $jsonAdapter->deserialize('{"int": 123, ...}') // -> new Item(123, ...)
 ```
 
-## Type mappers
+### Custom mappers
 
-You can easily define mappers for any formats the following way:
+Mappers are the simplest form customizing serialization of types. All you have
+to do is to mark a method with either `#[MapTo()]` or `#[MapFrom]` attribute,
+specify the type in question as first parameter or return type and the serializer
+will handle the rest automatically. A single mapper may have as many map methods as you wish.
 
 ```php
-(new SerializerBuilder())->addMapperLast(new DateTimeMapper())
-
 final class DateTimeMapper
 {
 	#[MapTo(PrimitiveTypeAdapter::class)]
-	public function to(DateTime $value): string
+	public function serialize(DateTime $value): string
 	{
 		return $value->format(DateTimeInterface::RFC3339_EXTENDED);
 	}
 
 	#[MapFrom(PrimitiveTypeAdapter::class)]
-	public function from(string $value): DateTime
+	public function deserialize(string $value): DateTime
 	{
 		return new DateTime($value);
 	}
 }
+
+$serializer = (new SerializerBuilder())
+	->addMapperLast(new DateTimeMapper())
+	->build();
 ```
 
-You can also do more advanced mappers (subset of types, generics, multiple mappers):
+With mappers, you can even handle complex types - such as generics or inheritance:
 
 ```php
-final class TestMapper
+final class ArrayMapper
+{
+	#[MapTo(PrimitiveTypeAdapter::class)]
+	public function to(array $value, Type $type, Serializer $serializer): array
+	{
+		$itemAdapter = $serializer->adapter(PrimitiveTypeAdapter::class, $type->arguments[1]);
+		
+		return array_map(fn ($item) => $itemAdapter->serialize($item), $value);
+	}
+
+	#[MapFrom(PrimitiveTypeAdapter::class)]
+	public function from(array $value, Type $type, Serializer $serializer): array
+	{
+		$itemAdapter = $serializer->adapter(PrimitiveTypeAdapter::class, $type->arguments[1]);
+
+		return array_map(fn ($item) => $itemAdapter->deserialize($item), $value);
+	}
+}
+
+final class BackedEnumMapper
 {
 	#[MapTo(PrimitiveTypeAdapter::class, new BaseTypeAcceptedByAcceptanceStrategy(BackedEnum::class))]
 	public function to(BackedEnum $value): string|int
 	{
-		//
+		return $value->value;
 	}
-
+	
 	#[MapFrom(PrimitiveTypeAdapter::class, new BaseTypeAcceptedByAcceptanceStrategy(BackedEnum::class))]
 	public function from(string|int $value, Type $type): BackedEnum
 	{
-		//
-	}
-	
-	// 
-	#[MapTo(PrimitiveTypeAdapter::class)]
-	public function to(Optional $value, Type $type, Serializer $serializer): mixed
-	{
-		$valueAdapter = $serializer->adapter(PrimitiveTypeAdapter::class, $type->arguments[0]);
-
-		return $valueAdapter->serialize($value->value());
+		$enumClass = $type->name;
+		
+		return $enumClass::tryFrom($value);
 	}
 }
 ```
@@ -127,24 +143,74 @@ to use in order of priority:
 
 A factory has the following signature:
 ```php
-public function create(string $typeAdapterType, Type $type, array $attributes, Serializer $serializer): ?TypeAdapter
+public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?TypeAdapter
 ```
 If you return `null`, the next factory is called. Otherwise, the returned type adapter is used.
 
-This basic concept runs the serializer. Every type that is supported out-of-the-box also has
-it's factory and can be overwritten just by doing `->addFactoryLast()`. Type mappers are
-also just fancy adapter factories under the hood.
+The serialized is entirely built using type adapter factories. Every type that is 
+supported out-of-the-box also has it's factory and can be overwritten just by doing 
+`->addFactoryLast()`. Type mappers are also just fancy adapter factories under the hood.
+
+This is how you can use them:
+
+```php
+class NullableTypeAdapterFactory implements TypeAdapterFactory
+{
+	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?TypeAdapter
+	{
+		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NullableType) {
+			return null;
+		}
+
+		return new NullableTypeAdapter(
+			$serializer->adapter($typeAdapterType, $type->innerType, $attributes),
+		);
+	}
+}
+
+class NullableTypeAdapter implements PrimitiveTypeAdapter
+{
+	public function __construct(
+		private readonly PrimitiveTypeAdapter $delegate,
+	) {
+	}
+
+	public function serialize(mixed $value): mixed
+	{
+		if ($value === null) {
+			return null;
+		}
+
+		return $this->delegate->serialize($value);
+	}
+
+	public function deserialize(mixed $value): mixed
+	{
+		if ($value === null) {
+			return null;
+		}
+
+		return $this->delegate->deserialize($value);
+	}
+}
+```
+
+In this example, `NullableTypeAdapterFactory` handles all nullable types. When a non-nullable
+type is given, it returns `null`. That means that the next in "queue" type adapter will be
+called. When a nullable is given, it returns a new type adapter instance which has two
+methods: `serialize` and `deserialize`. They do exactly what they're called.
 
 ## Naming of keys
 
-By default serializer preserves the naming of keys but there are ways to change this:
- - specify a custom global naming strategy (use one of the built in or write your own)
- - specify a naming strategy per-type using the `#[SerializedName]` attribute
- - specify a custom property name using that same `#[SerializedName]` attribute
+By default serializer preserves the naming of keys, but this is easily customizable (in order of priority):
+  - specify a custom property name using that same `#[SerializedName]` attribute
+  - specify a custom naming strategy per class using the `#[SerializedName]` attribute
+  - specify a custom global naming strategy (use one of the built in or write your own)
 
 Here's an example:
+
 ```php
-(new SerializerBuilder())->namingStrategy(BuiltInNamingStrategy::SNAKE_CASE)
+(new SerializerBuilder())->namingStrategy(BuiltInNamingStrategy::SNAKE_CASE);
 
 // Uses snake_case by default
 class Item1 {
@@ -164,12 +230,31 @@ class Item2 {
 }
 ```
 
+Out of the box, strategies for `snake_case`, `camelCase` and `PascalCase` are provided,
+but you it's trivial to implement your own:
+
+```php
+class PrefixedNaming implements NamingStrategy {
+	public function __construct(
+		private readonly string $prefix,
+	) {}
+	
+	public function translate(PropertyReflection $property): string
+	{
+		return $this->prefix . $property->name();
+	}
+}
+
+#[SerializedName(new PrefixedNaming('$'))]
+class SiftTrackData {}
+```
+
 ## Required, nullable, optional and default values
 
 By default if a property is missing in serialized payload:
  - nullable properties are just set to null
  - properties with a default value - use the default value
- - optional properties are set to an empty optional
+ - optional properties are set to `MissingValue::INSTANCE`
  - any other throw an exception
 
 Here's an example:
@@ -184,14 +269,11 @@ $adapter->deserialize(['fifth' => 123]);
 $adapter->deserialize(['first' => 123, 'second' => false, ...]);
 
 class Item {
-	/**
-	 * @param Optional<int> $fourth
-	 */
 	public function __construct(
 		public ?int $first, // set to null
 		public bool $second = true, // set to true
 		public Item $third = new Item(...), // set to Item instance
-		public Optional $fourth, // set to empty optional
+		public int|MissingValue $fourth, // set to MissingValue::INSTANCE
 		public int $fifth, // required, throws if missing
 	) {}
 }
@@ -210,13 +292,13 @@ These are some of the errors you'll get:
  - Could not map item at key '0': Expected value of type 'string', but got 'NULL' (and 1 more errors)."
  - Could not map property at path 'nested.field': Expected value of type 'string', but got 'integer'
 
-Of course, all of these are just a chain of PHP exceptions with `previous` exceptions. Besides
+All of these are just a chain of PHP exceptions with `previous` exceptions. Besides
 those messages, you have all of the thrown exceptions with necessary information.
 
 ## More formats
 
-You can add support for more formats (any you wish) with your own type adapters. 
-All of the existing adapters are at your hands:
+You can add support for more formats as you wish with your own type adapters. 
+All of the existing adapters are at your disposal:
 
 ```php
 interface XmlTypeAdapter extends TypeAdapter {}
@@ -224,18 +306,29 @@ interface XmlTypeAdapter extends TypeAdapter {}
 final class FromPrimitiveXmlTypeAdapter implements XmlTypeAdapter
 {
 	public function __construct(
-		private readonly PrimitiveTypeAdapter $primitiveDelegate,
+		private readonly PrimitiveTypeAdapter $primitiveAdapter,
 	) {
 	}
 
 	public function serialize(mixed $value): mixed
 	{
-		return xml_encode($this->primitiveDelegate->serialize($value));
+		return xml_encode($this->primitiveAdapter->serialize($value));
 	}
 
 	public function deserialize(mixed $value): mixed
 	{
-		return $this->primitiveDelegate->deserialize(xml_decode($value));
+		return $this->primitiveAdapter->deserialize(xml_decode($value));
 	}
 }
 ```
+
+## Why this over everything else?
+
+There are some alternatives to this, but all of them will lack at least one of these:
+  - doesn't rely on inheritance, hence allows serializing third-party classes
+  - parses existing PHPDoc information instead of duplicating it through attributes
+  - supports generic types which are extremely useful for wrappers
+  - allows simple extension through mappers and complex stuff through type adapters
+  - produces developer-friendly error messages on invalid data
+  - correctly handles optional and `null` values as separate concepts
+

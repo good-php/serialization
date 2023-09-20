@@ -7,5 +7,10 @@ use GoodPhp\Serialization\Serializer;
 
 interface BoundClassPropertyFactory
 {
-	public function create(PropertyReflection $property, string $serializedName, string $typeAdapterType, Serializer $serializer): BoundClassProperty;
+	public function create(
+		string $typeAdapterType,
+		string $serializedName,
+		PropertyReflection $property,
+		Serializer $serializer
+	): DefaultBoundClassProperty;
 }

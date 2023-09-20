@@ -23,9 +23,9 @@ final class MapperMethodsPrimitiveTypeAdapterFactoryFactory
 
 		return new MapperMethodsPrimitiveTypeAdapterFactory(
 			resolveToMappers: fn (MapperMethodsPrimitiveTypeAdapterFactory $factory) => $reflection->methods()
-				->filter(fn (MethodReflection $method)                                  => $method->attributes()->whereInstanceOf(MapTo::class)->isNotEmpty())
+				->filter(fn (MethodReflection $method)                                  => $method->attributes()->has(MapTo::class))
 				->map(function (MethodReflection $method) use ($adapter, $factory) {
-					$attribute = $method->attributes()->whereInstanceOf(MapTo::class)->firstOrFail();
+					$attribute = $method->attributes()->sole(MapTo::class);
 
 					return $this->mapperMethodFactory->create(
 						$method,
@@ -36,9 +36,9 @@ final class MapperMethodsPrimitiveTypeAdapterFactoryFactory
 					);
 				}),
 			resolveFromMappers: fn (MapperMethodsPrimitiveTypeAdapterFactory $factory) => $reflection->methods()
-				->filter(fn (MethodReflection $method)                                    => $method->attributes()->whereInstanceOf(MapFrom::class)->isNotEmpty())
+				->filter(fn (MethodReflection $method)                                    => $method->attributes()->has(MapFrom::class))
 				->map(function (MethodReflection $method) use ($adapter, $factory) {
-					$attribute = $method->attributes()->whereInstanceOf(MapFrom::class)->firstOrFail();
+					$attribute = $method->attributes()->sole(MapFrom::class);
 
 					return $this->mapperMethodFactory->create(
 						$method,

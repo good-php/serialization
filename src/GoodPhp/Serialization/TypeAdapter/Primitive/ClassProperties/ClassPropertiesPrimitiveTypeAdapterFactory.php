@@ -2,12 +2,13 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties;
 
+use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Reflector\Reflection\ClassReflection;
 use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
 use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\Type;
+use GoodPhp\Serialization\Hydration\Hydrator;
 use GoodPhp\Serialization\Serializer;
-use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Constructing\ObjectFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\NamingStrategy;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\BoundClassPropertyFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
@@ -17,7 +18,7 @@ final class ClassPropertiesPrimitiveTypeAdapterFactory implements TypeAdapterFac
 {
 	public function __construct(
 		private readonly NamingStrategy $namingStrategy,
-		private readonly ObjectFactory $objectFactory,
+		private readonly Hydrator $hydrator,
 		private readonly BoundClassPropertyFactory $boundClassPropertyFactory,
 	) {
 	}
@@ -25,7 +26,7 @@ final class ClassPropertiesPrimitiveTypeAdapterFactory implements TypeAdapterFac
 	/**
 	 * @inheritDoc
 	 */
-	public function create(string $typeAdapterType, Type $type, array $attributes, Serializer $serializer)
+	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer)
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NamedType) {
 			return null;
@@ -38,18 +39,16 @@ final class ClassPropertiesPrimitiveTypeAdapterFactory implements TypeAdapterFac
 		}
 
 		return new ClassPropertiesPrimitiveTypeAdapter(
-			$reflection->properties()->map(function (PropertyReflection $property) use ($reflection, $serializer, $typeAdapterType) {
-				$serializedName = $this->namingStrategy->translate($property->name(), $property->attributes(), $reflection->attributes());
+			$this->hydrator,
+			$reflection->qualifiedName(),
+			$reflection->properties()->map(function (PropertyReflection $property) use ($serializer, $typeAdapterType, $attributes) {
+				$serializedName = $this->namingStrategy->translate($property);
 
-				return PropertyMappingException::rethrow($serializedName, fn () => $this->boundClassPropertyFactory->create(
-					property: $property,
-					serializedName: $serializedName,
-					typeAdapterType: $typeAdapterType,
-					serializer: $serializer
-				));
-			}),
-			$reflection,
-			$this->objectFactory,
+				return PropertyMappingException::rethrow(
+					$serializedName,
+					fn () => $this->boundClassPropertyFactory->create($typeAdapterType, $serializedName, $property, $serializer),
+				);
+			})
 		);
 	}
 }

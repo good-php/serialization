@@ -2,10 +2,9 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties;
 
-use GoodPhp\Reflection\Reflector\Reflection\ClassReflection;
+use GoodPhp\Serialization\Hydration\Hydrator;
 use GoodPhp\Serialization\TypeAdapter\Exception\MultipleMappingException;
-use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Constructing\ObjectFactory;
-use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\BoundClassProperty;
+use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\DefaultBoundClassProperty;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
 use Illuminate\Support\Collection;
 
@@ -15,13 +14,12 @@ use Illuminate\Support\Collection;
 final class ClassPropertiesPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 {
 	/**
-	 * @param Collection<int, BoundClassProperty> $properties
-	 * @param ObjectFactory<T>                    $objectFactory
+	 * @param Collection<int, DefaultBoundClassProperty> $properties
 	 */
 	public function __construct(
+		private readonly Hydrator $hydrator,
+		private readonly string $className,
 		private readonly Collection $properties,
-		private readonly ClassReflection $reflection,
-		private readonly ObjectFactory $objectFactory,
 	) {
 	}
 
@@ -33,7 +31,7 @@ final class ClassPropertiesPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 		return MultipleMappingException::map(
 			$this->properties,
 			true,
-			fn (BoundClassProperty $property) => PropertyMappingException::rethrow(
+			fn (DefaultBoundClassProperty $property) => PropertyMappingException::rethrow(
 				$property,
 				fn () => $property->serialize($value)
 			)
@@ -45,15 +43,15 @@ final class ClassPropertiesPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 	 */
 	public function deserialize(mixed $value): mixed
 	{
-		$data = MultipleMappingException::map(
+		$properties = MultipleMappingException::map(
 			$this->properties,
 			true,
-			fn (BoundClassProperty $property) => PropertyMappingException::rethrow(
+			fn (DefaultBoundClassProperty $property) => PropertyMappingException::rethrow(
 				$property,
 				fn () => $property->deserialize($value)
 			)
 		);
 
-		return $this->objectFactory->create($this->reflection, $data);
+		return $this->hydrator->hydrate($this->className, $properties);
 	}
 }
