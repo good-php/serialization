@@ -33,7 +33,7 @@ class Item
 		// Generics and nested objects
 		public readonly mixed $generic,
 		public readonly NestedGenerics $nestedGeneric,
-		// Arrays and Illuminate Collection of any type (even generics!)
+		// Arrays and Illuminate Collection of any type (with generics!)
 		public readonly array $array,
 		public readonly Collection $collection,
 		// Dates
@@ -369,8 +369,9 @@ There are some alternatives to this, but all of them will lack at least one of t
 
 - doesn't rely on inheritance, hence allows serializing third-party classes
 - parses existing PHPDoc information instead of duplicating it through attributes
-- supports generic types which are extremely useful for wrappers
+- supports generic types which are extremely useful for wrapper types
 - allows simple extension through mappers and complex stuff through type adapters
 - produces developer-friendly error messages on invalid data
 - correctly handles optional and `null` values as separate concepts
+- simple to extend with additional formats
 
