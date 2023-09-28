@@ -27,5 +27,5 @@ interface BoundClassProperty
 	 */
 	public function deserialize(array $data): array;
 
-	public function serializedName(): string;
+	public function serializedName(): ?string;
 }

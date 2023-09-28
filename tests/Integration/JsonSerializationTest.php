@@ -142,8 +142,9 @@ class JsonSerializationTest extends TestCase
 				123,
 				123,
 				MissingValue::INSTANCE,
+				new NestedStub('flattened')
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123,"Field":"flattened"}',
 		];
 
 		yield 'ClassStub with empty optional and null nullable' => [
@@ -160,8 +161,9 @@ class JsonSerializationTest extends TestCase
 				MissingValue::INSTANCE,
 				null,
 				MissingValue::INSTANCE,
+				new NestedStub('flattened')
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null,"Field":"flattened"}',
 		];
 	}
 
@@ -285,8 +287,9 @@ class JsonSerializationTest extends TestCase
 				123,
 				123,
 				MissingValue::INSTANCE,
+				new NestedStub('flattened')
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123,"Field":"flattened"}',
 		];
 
 		yield 'ClassStub with empty optional and null nullable' => [
@@ -303,8 +306,9 @@ class JsonSerializationTest extends TestCase
 				MissingValue::INSTANCE,
 				null,
 				MissingValue::INSTANCE,
+				new NestedStub('flattened'),
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null,"Field":"flattened"}',
 		];
 
 		yield 'ClassStub with the least default fields' => [
@@ -321,6 +325,7 @@ class JsonSerializationTest extends TestCase
 				MissingValue::INSTANCE,
 				null,
 				MissingValue::INSTANCE,
+				new NestedStub(),
 			),
 			'{"primitive":1,"nested":{},"date":"2020-01-01T00:00:00.000+00:00"}',
 		];

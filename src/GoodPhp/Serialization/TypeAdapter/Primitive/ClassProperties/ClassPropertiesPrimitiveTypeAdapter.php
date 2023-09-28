@@ -4,7 +4,7 @@ namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties;
 
 use GoodPhp\Serialization\Hydration\Hydrator;
 use GoodPhp\Serialization\TypeAdapter\Exception\MultipleMappingException;
-use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\DefaultBoundClassProperty;
+use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\BoundClassProperty;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
 use Illuminate\Support\Collection;
 
@@ -14,13 +14,14 @@ use Illuminate\Support\Collection;
 final class ClassPropertiesPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 {
 	/**
-	 * @param Collection<int, DefaultBoundClassProperty> $properties
+	 * @param Collection<int, BoundClassProperty> $properties
 	 */
 	public function __construct(
-		private readonly Hydrator $hydrator,
-		private readonly string $className,
+		private readonly Hydrator   $hydrator,
+		private readonly string     $className,
 		private readonly Collection $properties,
-	) {
+	)
+	{
 	}
 
 	/**
@@ -31,9 +32,9 @@ final class ClassPropertiesPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 		return MultipleMappingException::map(
 			$this->properties,
 			true,
-			fn (DefaultBoundClassProperty $property) => PropertyMappingException::rethrow(
+			fn(BoundClassProperty $property) => PropertyMappingException::rethrow(
 				$property,
-				fn () => $property->serialize($value)
+				fn() => $property->serialize($value)
 			)
 		);
 	}
@@ -46,9 +47,9 @@ final class ClassPropertiesPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 		$properties = MultipleMappingException::map(
 			$this->properties,
 			true,
-			fn (DefaultBoundClassProperty $property) => PropertyMappingException::rethrow(
+			fn(BoundClassProperty $property) => PropertyMappingException::rethrow(
 				$property,
-				fn () => $property->deserialize($value)
+				fn() => $property->deserialize($value)
 			)
 		);
 

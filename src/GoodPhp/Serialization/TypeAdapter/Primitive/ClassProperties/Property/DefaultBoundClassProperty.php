@@ -1,6 +1,7 @@
 <?php
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties;
+
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property;
 
 use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
@@ -22,13 +23,19 @@ use Illuminate\Support\Arr;
 final class DefaultBoundClassProperty implements BoundClassProperty
 {
 	public function __construct(
-		private readonly PropertyReflection $reflection,
-		private readonly TypeAdapter $typeAdapter,
-		private readonly string $serializedName,
-		private readonly bool $optional,
-		private readonly bool $hasDefaultValue,
-		private readonly bool $nullable,
-	) {
+		private readonly PropertyReflection $property,
+		private readonly TypeAdapter        $typeAdapter,
+		private readonly string             $serializedName,
+		private readonly bool               $optional,
+		private readonly bool               $hasDefaultValue,
+		private readonly bool               $nullable,
+	)
+	{
+	}
+
+	public function serializedName(): string
+	{
+		return $this->serializedName;
 	}
 
 	/**
@@ -36,7 +43,7 @@ final class DefaultBoundClassProperty implements BoundClassProperty
 	 */
 	public function serialize(object $object): array
 	{
-		$value = $this->reflection->get($object);
+		$value = $this->property->get($object);
 
 		if ($this->optional && $value === MissingValue::INSTANCE) {
 			return [];
@@ -52,7 +59,7 @@ final class DefaultBoundClassProperty implements BoundClassProperty
 		if (!Arr::has($data, $this->serializedName)) {
 			if ($this->optional) {
 				return [
-					$this->reflection->name() => MissingValue::INSTANCE,
+					$this->property->name() => MissingValue::INSTANCE,
 				];
 			}
 
@@ -62,7 +69,7 @@ final class DefaultBoundClassProperty implements BoundClassProperty
 
 			if ($this->nullable) {
 				return [
-					$this->reflection->name() => null,
+					$this->property->name() => null,
 				];
 			}
 
@@ -70,12 +77,7 @@ final class DefaultBoundClassProperty implements BoundClassProperty
 		}
 
 		return [
-			$this->reflection->name() => $this->typeAdapter->deserialize($data[$this->serializedName])
+			$this->property->name() => $this->typeAdapter->deserialize($data[$this->serializedName])
 		];
-	}
-
-	public function serializedName(): string
-	{
-		return $this->serializedName;
 	}
 }

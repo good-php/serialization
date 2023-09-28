@@ -33,7 +33,7 @@ class SerializedNameAttributeNamingStrategy implements NamingStrategy
 		$serializedName = $property->attributes()->sole(SerializedName::class);
 
 		if (!$serializedName) {
-			$serializedName = $property->owner->attributes()->sole(SerializedName::class);
+			$serializedName = $property->declaringType->attributes()->sole(SerializedName::class);
 
 			Assert::nullOrIsInstanceOf(
 				$serializedName?->nameOrStrategy,

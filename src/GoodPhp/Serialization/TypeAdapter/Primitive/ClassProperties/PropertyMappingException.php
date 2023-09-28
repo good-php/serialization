@@ -12,8 +12,9 @@ class PropertyMappingException extends RuntimeException
 {
 	public function __construct(
 		public readonly string $path,
-		Throwable $previous,
-	) {
+		Throwable              $previous,
+	)
+	{
 		parent::__construct("Could not map property at path '{$path}': {$previous->getMessage()}", 0, $previous);
 	}
 
@@ -24,9 +25,9 @@ class PropertyMappingException extends RuntimeException
 		try {
 			return $callback();
 		} catch (PropertyMappingException $e) {
-			throw new self($serializedName . '.' . $e->path, $e->getPrevious());
+			throw new self($serializedName ? $serializedName . '.' . $e->path : $e->path, $e->getPrevious());
 		} catch (CollectionItemMappingException $e) {
-			throw new self($serializedName . '.' . $e->key, $e->getPrevious());
+			throw new self($serializedName ? $serializedName . '.' . $e->key : $e->key, $e->getPrevious());
 		} catch (Exception $e) {
 			throw new self($serializedName, $e);
 		}
