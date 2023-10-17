@@ -2,6 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\TypeAdapter;
 
+use GoodPhp\Reflection\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapperMethod\MapperMethod;
@@ -15,6 +16,7 @@ final class MapperMethodsPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 		private readonly ?MapperMethod $fromMapper,
 		private readonly ?PrimitiveTypeAdapter $fallbackDelegate,
 		private readonly Type $type,
+		private readonly Attributes $attributes,
 		private readonly Serializer $serializer,
 		private readonly MapperMethodsPrimitiveTypeAdapterFactory $skipPast,
 	) {
@@ -29,7 +31,7 @@ final class MapperMethodsPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 	public function serialize(mixed $value): mixed
 	{
 		return $this->toMapper ?
-			$this->toMapper->invoke($value, $this->type, $this->serializer, $this->skipPast) :
+			$this->toMapper->invoke($value, $this->type, $this->attributes, $this->serializer, $this->skipPast) :
 			$this->fallbackDelegate->serialize($value);
 	}
 
@@ -39,7 +41,7 @@ final class MapperMethodsPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 	public function deserialize(mixed $value): mixed
 	{
 		return $this->fromMapper ?
-			$this->fromMapper->invoke($value, $this->type, $this->serializer, $this->skipPast) :
+			$this->fromMapper->invoke($value, $this->type, $this->attributes, $this->serializer, $this->skipPast) :
 			$this->fallbackDelegate->deserialize($value);
 	}
 }

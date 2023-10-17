@@ -6,9 +6,12 @@ namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property;
 
 use GoodPhp\Reflection\Reflection\PropertyReflection;
 use GoodPhp\Serialization\MissingValue;
+use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedEnumValueException;
+use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedValueException;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\MissingValueException;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use Illuminate\Support\Arr;
+use Webmozart\Assert\Assert;
 
 /**
  * This handles the built-in default mechanism of binding properties. Specifically, it handles:
@@ -29,8 +32,12 @@ final class DefaultBoundClassProperty implements BoundClassProperty
 		private readonly bool               $optional,
 		private readonly bool               $hasDefaultValue,
 		private readonly bool               $nullable,
+		private readonly bool               $useDefaultForUnexpected,
 	)
 	{
+		if ($this->useDefaultForUnexpected) {
+			Assert::true($this->hasDefaultValue, "When using #[UseDefaultForUnexpected], the property must have a default value.");
+		}
 	}
 
 	public function serializedName(): string
@@ -76,8 +83,16 @@ final class DefaultBoundClassProperty implements BoundClassProperty
 			throw new MissingValueException();
 		}
 
-		return [
-			$this->property->name() => $this->typeAdapter->deserialize($data[$this->serializedName])
-		];
+		try {
+			return [
+				$this->property->name() => $this->typeAdapter->deserialize($data[$this->serializedName])
+			];
+		} catch (UnexpectedValueException $e) {
+			if ($this->useDefaultForUnexpected) {
+				return [];
+			}
+
+			throw $e;
+		}
 	}
 }

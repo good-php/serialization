@@ -12,5 +12,5 @@ interface MapperMethod
 {
 	public function accepts(NamedType $type, Attributes $attributes, Serializer $serializer): bool;
 
-	public function invoke(mixed $value, Type $type, Serializer $serializer, MapperMethodsPrimitiveTypeAdapterFactory $skipPast): mixed;
+	public function invoke(mixed $value, Type $type, Attributes $attributes, Serializer $serializer, MapperMethodsPrimitiveTypeAdapterFactory $skipPast): mixed;
 }

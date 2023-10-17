@@ -44,6 +44,7 @@ final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFacto
 			fromMapper: $fromMapper,
 			fallbackDelegate: $fallbackDelegate,
 			type: $type,
+			attributes: $attributes,
 			serializer: $serializer,
 			skipPast: $this,
 		);

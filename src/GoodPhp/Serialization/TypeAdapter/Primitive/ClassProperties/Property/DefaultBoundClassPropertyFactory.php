@@ -43,6 +43,7 @@ class DefaultBoundClassPropertyFactory implements BoundClassPropertyFactory
 			optional: $optional,
 			hasDefaultValue: $this->hasDefaultValue($property),
 			nullable: $type instanceof NullableType,
+			useDefaultForUnexpected: $property->attributes()->has(UseDefaultForUnexpected::class),
 		);
 	}
 

@@ -8,7 +8,7 @@ use GoodPhp\Reflection\Reflection\MethodReflection;
 use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
-use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedValueTypeException;
+use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedTypeException;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\Acceptance\AcceptanceStrategy;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\TypeAdapter\MapperMethodsPrimitiveTypeAdapterFactory;
 use TypeError;
@@ -29,12 +29,13 @@ final class InstanceMapperMethod implements MapperMethod
 		return $this->acceptanceStrategy->accepts($this->methodValueType, $type, $serializer);
 	}
 
-	public function invoke(mixed $value, Type $type, Serializer $serializer, MapperMethodsPrimitiveTypeAdapterFactory $skipPast): mixed
+	public function invoke(mixed $value, Type $type, Attributes $attributes, Serializer $serializer, MapperMethodsPrimitiveTypeAdapterFactory $skipPast): mixed
 	{
 		$map = [
 			MapperMethodsPrimitiveTypeAdapterFactory::class => $skipPast,
 			Serializer::class                               => $serializer,
 			Type::class                                     => $type,
+			Attributes::class => $attributes,
 		];
 
 		try {
@@ -58,7 +59,7 @@ final class InstanceMapperMethod implements MapperMethod
 				throw $e;
 			}
 
-			throw new UnexpectedValueTypeException($value, $this->method->parameters()->first()->type());
+			throw new UnexpectedTypeException($value, $this->method->parameters()->first()->type());
 		}
 	}
 }

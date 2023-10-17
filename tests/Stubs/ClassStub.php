@@ -2,6 +2,7 @@
 
 namespace Tests\Stubs;
 
+use Carbon\CarbonImmutable;
 use GoodPhp\Serialization\MissingValue;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\SerializedName;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\Flattening\Flatten;
@@ -24,6 +25,7 @@ class ClassStub
 		public int|MissingValue      $nonNullOptional,
 		#[Flatten]
 		public NestedStub            $flattened,
+		public readonly CarbonImmutable $carbonImmutable,
 	)
 	{
 	}

@@ -16,6 +16,7 @@ use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\BackedEnumMapper;
 use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\DateTimeMapper;
 use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\Nullable\NullableTypeAdapterFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\ScalarMapper;
+use GoodPhp\Serialization\TypeAdapter\Primitive\Carbon\CarbonMapper;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\ClassPropertiesPrimitiveTypeAdapterFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\BuiltInNamingStrategy;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\NamingStrategy;
@@ -148,6 +149,7 @@ final class SerializerBuilder
 			->addMapperLast(new ArrayMapper())
 			->addMapperLast(new CollectionMapper())
 			->addMapperLast(new DateTimeMapper())
+			->addMapperLast(new CarbonMapper())
 			->addFactoryLast(new ClassPropertiesPrimitiveTypeAdapterFactory(
 				new SerializedNameAttributeNamingStrategy($this->namingStrategy ?? BuiltInNamingStrategy::PRESERVING),
 				$this->hydrator ?? new ConstructorHydrator(),

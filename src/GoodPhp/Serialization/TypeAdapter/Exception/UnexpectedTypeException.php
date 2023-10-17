@@ -6,7 +6,7 @@ use GoodPhp\Reflection\Type\Type;
 use RuntimeException;
 use Throwable;
 
-class UnexpectedValueTypeException extends RuntimeException
+class UnexpectedTypeException extends RuntimeException
 {
 	public function __construct(
 		public readonly mixed $value,

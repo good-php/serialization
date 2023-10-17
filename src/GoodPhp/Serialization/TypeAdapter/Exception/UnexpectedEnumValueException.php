@@ -5,7 +5,7 @@ namespace GoodPhp\Serialization\TypeAdapter\Exception;
 use RuntimeException;
 use Throwable;
 
-class UnexpectedEnumValueException extends RuntimeException
+class UnexpectedEnumValueException extends RuntimeException implements UnexpectedValueException
 {
 	public function __construct(
 		public readonly string|int $value,
