@@ -1,10 +1,10 @@
 <?php
 
-namespace GoodPhp\Serialization\TypeAdapter\Registry\Factory;
+namespace GoodPhp\Serialization\Serializer\Registry\Factory;
 
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\TypeAdapter\MatchingDelegate\MatchingDelegateTypeAdapterFactory;
-use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapperMethodsPrimitiveTypeAdapterFactoryFactory;
+use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\TypeAdapter\MapperMethodsPrimitiveTypeAdapterFactoryFactory;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 
@@ -20,9 +20,10 @@ final class FactoryTypeAdapterRegistryBuilder
 
 	public function addFactory(TypeAdapterFactory $factory): self
 	{
-		array_unshift($this->factories, $factory);
+		$that = clone $this;
+		array_unshift($that->factories, $factory);
 
-		return $this;
+		return $that;
 	}
 
 	public function addMapper(object $adapter): self
@@ -40,9 +41,10 @@ final class FactoryTypeAdapterRegistryBuilder
 
 	public function addFactoryLast(TypeAdapterFactory $factory): self
 	{
-		$this->factories[] = $factory;
+		$that = clone $this;
+		$that->factories[] = $factory;
 
-		return $this;
+		return $that;
 	}
 
 	public function addMapperLast(object $adapter): self

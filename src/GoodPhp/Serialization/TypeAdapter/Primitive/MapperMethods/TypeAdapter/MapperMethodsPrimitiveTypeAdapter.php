@@ -1,9 +1,10 @@
 <?php
 
-namespace GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods;
+namespace GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\TypeAdapter;
 
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
+use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapperMethod\MapperMethod;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
 use Webmozart\Assert\Assert;
 
@@ -15,6 +16,7 @@ final class MapperMethodsPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 		private readonly ?PrimitiveTypeAdapter $fallbackDelegate,
 		private readonly Type $type,
 		private readonly Serializer $serializer,
+		private readonly MapperMethodsPrimitiveTypeAdapterFactory $skipPast,
 	) {
 		// Make sure there's either both mappers or one of the mappers and a fallback.
 		Assert::true($this->toMapper || $this->fallbackDelegate);
@@ -27,7 +29,7 @@ final class MapperMethodsPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 	public function serialize(mixed $value): mixed
 	{
 		return $this->toMapper ?
-			$this->toMapper->invoke($this->serializer, $this->type, $value) :
+			$this->toMapper->invoke($value, $this->type, $this->serializer, $this->skipPast) :
 			$this->fallbackDelegate->serialize($value);
 	}
 
@@ -37,7 +39,7 @@ final class MapperMethodsPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 	public function deserialize(mixed $value): mixed
 	{
 		return $this->fromMapper ?
-			$this->fromMapper->invoke($this->serializer, $this->type, $value) :
+			$this->fromMapper->invoke($value, $this->type, $this->serializer, $this->skipPast) :
 			$this->fallbackDelegate->deserialize($value);
 	}
 }

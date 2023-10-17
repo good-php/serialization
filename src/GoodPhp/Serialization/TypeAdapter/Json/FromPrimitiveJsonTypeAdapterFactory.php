@@ -2,7 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Json;
 
-use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
+use GoodPhp\Reflection\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;

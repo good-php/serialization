@@ -1,33 +1,27 @@
 <?php
 
-namespace GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods;
+namespace GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\TypeAdapter;
 
-use Closure;
-use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
+use GoodPhp\Reflection\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
+use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapperMethod\MapperMethod;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 use Illuminate\Support\Collection;
+use Webmozart\Assert\Assert;
 
 final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFactory
 {
-	/** @var Collection<int, MapperMethod> */
-	private readonly Collection $toMappers;
-
-	/** @var Collection<int, MapperMethod> */
-	private readonly Collection $fromMappers;
-
 	public function __construct(
-		Closure $resolveToMappers,
-		Closure $resolveFromMappers,
+		/** @var Collection<int, MapperMethod> */
+		private readonly Collection $toMappers,
+		/** @var Collection<int, MapperMethod> */
+		private readonly Collection $fromMappers,
 	) {
-		$this->toMappers = $resolveToMappers($this);
-		$this->fromMappers = $resolveFromMappers($this);
-
-		assert($this->toMappers || $this->fromMappers);
+		Assert::true($this->toMappers->isNotEmpty() || $this->fromMappers->isNotEmpty());
 	}
 
 	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?TypeAdapter
@@ -36,18 +30,8 @@ final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFacto
 			return null;
 		}
 
-		$toMapper = $this->findMapper(
-			$this->toMappers,
-			$type,
-			$attributes,
-			$serializer
-		);
-		$fromMapper = $this->findMapper(
-			$this->fromMappers,
-			$type,
-			$attributes,
-			$serializer
-		);
+		$toMapper = $this->findMapper($this->toMappers, $type, $attributes, $serializer);
+		$fromMapper = $this->findMapper($this->fromMappers, $type, $attributes, $serializer);
 
 		if (!$toMapper && !$fromMapper) {
 			return null;
@@ -61,6 +45,7 @@ final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFacto
 			fallbackDelegate: $fallbackDelegate,
 			type: $type,
 			serializer: $serializer,
+			skipPast: $this,
 		);
 	}
 
@@ -69,15 +54,6 @@ final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFacto
 	 */
 	private function findMapper(Collection $mappers, NamedType $type, Attributes $attributes, Serializer $serializer): ?MapperMethod
 	{
-		return $mappers
-			->filter(
-				function (MapperMethod $mapper) use ($serializer, $type) {
-					$method = $mapper->typeSubstituter->resolve($type);
-					$receivingType = ($mapper->methodValueType)($method);
-
-					return $mapper->acceptanceStrategy->accepts($receivingType, $type, $serializer);
-				}
-			)
-			->first();
+		return $mappers->first(fn (MapperMethod $method) => $method->accepts($type, $attributes, $serializer));
 	}
 }

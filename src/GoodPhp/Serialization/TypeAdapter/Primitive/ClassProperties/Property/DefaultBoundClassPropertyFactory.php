@@ -2,7 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property;
 
-use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
+use GoodPhp\Reflection\Reflection\PropertyReflection;
 use GoodPhp\Reflection\Type\Combinatorial\UnionType;
 use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\Special\NullableType;
@@ -54,8 +54,8 @@ class DefaultBoundClassPropertyFactory implements BoundClassPropertyFactory
 	 */
 	private function removeMissingValueType(Type $type, Serializer $serializer): array
 	{
-		$accepts = $serializer->reflector
-			->typeComparator
+		$accepts = $serializer->reflector()
+			->typeComparator()
 			->accepts($type, $this->missingValueType);
 
 		if ($type instanceof NullableType) {

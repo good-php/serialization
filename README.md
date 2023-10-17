@@ -207,7 +207,7 @@ methods: `serialize` and `deserialize`. They do exactly what they're called.
 
 By default serializer preserves the naming of keys, but this is easily customizable (in order of priority):
 
-- specify a custom property name using that same `#[SerializedName]` attribute
+- specify a custom property name using the `#[SerializedName]` attribute
 - specify a custom naming strategy per class using the `#[SerializedName]` attribute
 - specify a custom global naming strategy (use one of the built in or write your own)
 
@@ -374,4 +374,5 @@ There are some alternatives to this, but all of them will lack at least one of t
 - produces developer-friendly error messages on invalid data
 - correctly handles optional and `null` values as separate concepts
 - simple to extend with additional formats
+- simple internal structure: no nodes, value wrappers or any limitations
 

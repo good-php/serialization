@@ -1,8 +1,8 @@
 <?php
 
-namespace GoodPhp\Serialization\TypeAdapter\Registry;
+namespace GoodPhp\Serialization\Serializer\Registry;
 
-use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
+use GoodPhp\Reflection\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 use RuntimeException;

@@ -2,8 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming;
 
-use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
-use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
+use GoodPhp\Reflection\Reflection\PropertyReflection;
 
 interface NamingStrategy
 {

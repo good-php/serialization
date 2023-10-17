@@ -1,12 +1,13 @@
 <?php
 
-namespace GoodPhp\Serialization\TypeAdapter\Registry\Cache;
+namespace GoodPhp\Serialization\Serializer\Registry\Cache;
 
 use Ds\Map;
-use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
+use GoodPhp\Reflection\Reflection\Attributes\ArrayAttributes;
+use GoodPhp\Reflection\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
-use GoodPhp\Serialization\TypeAdapter\Registry\TypeAdapterRegistry;
+use GoodPhp\Serialization\Serializer\Registry\TypeAdapterRegistry;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 
@@ -21,7 +22,7 @@ final class CachingTypeAdapterRegistry implements TypeAdapterRegistry
 		$this->resolved = new Map();
 	}
 
-	public function forType(string $typeAdapterType, Serializer $serializer, Type $type, Attributes $attributes = new Attributes(), TypeAdapterFactory $skipPast = null): TypeAdapter
+	public function forType(string $typeAdapterType, Serializer $serializer, Type $type, Attributes $attributes = new ArrayAttributes(), TypeAdapterFactory $skipPast = null): TypeAdapter
 	{
 		$key = new ResolvedKey($typeAdapterType, $type, $attributes, $skipPast);
 

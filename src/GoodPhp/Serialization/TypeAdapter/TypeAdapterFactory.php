@@ -2,7 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter;
 
-use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
+use GoodPhp\Reflection\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
 

@@ -4,7 +4,7 @@ namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties;
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property;
 
-use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
+use GoodPhp\Reflection\Reflection\PropertyReflection;
 use GoodPhp\Serialization\MissingValue;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\MissingValueException;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;

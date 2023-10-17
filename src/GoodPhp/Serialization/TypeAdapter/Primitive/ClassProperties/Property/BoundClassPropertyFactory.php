@@ -2,7 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property;
 
-use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
+use GoodPhp\Reflection\Reflection\PropertyReflection;
 use GoodPhp\Serialization\Serializer;
 
 interface BoundClassPropertyFactory

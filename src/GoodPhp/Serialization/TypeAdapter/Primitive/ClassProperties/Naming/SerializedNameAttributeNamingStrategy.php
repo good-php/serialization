@@ -2,9 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming;
 
-use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
-use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
-use Illuminate\Support\Arr;
+use GoodPhp\Reflection\Reflection\PropertyReflection;
 use Webmozart\Assert\Assert;
 
 class SerializedNameAttributeNamingStrategy implements NamingStrategy
@@ -33,7 +31,7 @@ class SerializedNameAttributeNamingStrategy implements NamingStrategy
 		$serializedName = $property->attributes()->sole(SerializedName::class);
 
 		if (!$serializedName) {
-			$serializedName = $property->declaringType->attributes()->sole(SerializedName::class);
+			$serializedName = $property->declaringType()->attributes()->sole(SerializedName::class);
 
 			Assert::nullOrIsInstanceOf(
 				$serializedName?->nameOrStrategy,

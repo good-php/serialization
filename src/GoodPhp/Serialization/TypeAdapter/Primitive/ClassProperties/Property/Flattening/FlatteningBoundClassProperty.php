@@ -2,7 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\Flattening;
 
-use GoodPhp\Reflection\Reflector\Reflection\PropertyReflection;
+use GoodPhp\Reflection\Reflection\PropertyReflection;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\BoundClassProperty;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use Webmozart\Assert\Assert;

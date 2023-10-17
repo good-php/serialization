@@ -1,14 +1,13 @@
 <?php
 
-namespace GoodPhp\Serialization\TypeAdapter\Registry\Cache;
+namespace GoodPhp\Serialization\Serializer\Registry\Cache;
 
-use Ds\Hashable;
-use GoodPhp\Reflection\Reflector\Reflection\Attributes\Attributes;
+use GoodPhp\Reflection\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 use RuntimeException;
 
-final class ResolvedKey implements Hashable
+final class ResolvedKey
 {
 	public function __construct(
 		public readonly string $typeAdapterType,
