@@ -7,7 +7,7 @@ use GoodPhp\Reflection\ReflectorBuilder;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Hydration\ConstructorHydrator;
 use GoodPhp\Serialization\Hydration\Hydrator;
-use GoodPhp\Serialization\Serializer\Registry\Cache\CachingTypeAdapterRegistry;
+use GoodPhp\Serialization\Serializer\Registry\Cache\MemoizingTypeAdapterRegistry;
 use GoodPhp\Serialization\Serializer\Registry\Factory\FactoryTypeAdapterRegistryBuilder;
 use GoodPhp\Serialization\Serializer\TypeAdapterRegistrySerializer;
 use GoodPhp\Serialization\TypeAdapter\Json\FromPrimitiveJsonTypeAdapterFactory;
@@ -158,7 +158,7 @@ final class SerializerBuilder
 			->addFactoryLast(new FromPrimitiveJsonTypeAdapterFactory());
 
 		return new TypeAdapterRegistrySerializer(
-			new CachingTypeAdapterRegistry($typeAdapterRegistryBuilder->build()),
+			new MemoizingTypeAdapterRegistry($typeAdapterRegistryBuilder->build()),
 			$this->reflector()
 		);
 	}
