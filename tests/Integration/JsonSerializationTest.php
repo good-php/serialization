@@ -496,5 +496,11 @@ class JsonSerializationTest extends TestCase
 			),
 			'{"primitive":1,"nested":{"Field":123},"date":"2020-01-01T00:00:00.000+00:00","nullable":null,"carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
 		];
+
+		yield 'ClassStub with wrong nested array field type' => [
+			new PropertyMappingException('date.0.Field', new UnexpectedTypeException(123, PrimitiveType::string())),
+			NamedType::wrap(ClassStub::class, [PrimitiveType::array(NestedStub::class)]),
+			'{"primitive":1,"nested":{"Field":"something"},"date":[{"Field":123}],"nullable":null,"carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+		];
 	}
 }

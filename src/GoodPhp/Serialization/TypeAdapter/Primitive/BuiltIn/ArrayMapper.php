@@ -25,13 +25,14 @@ final class ArrayMapper
 	{
 		$itemAdapter = $serializer->adapter(PrimitiveTypeAdapter::class, $type->arguments[1]);
 
-		return MultipleMappingException::map($value, false, function (mixed $item, string|int $key) use ($itemAdapter) {
-			try {
-				return $itemAdapter->serialize($item);
-			} catch (Exception $e) {
-				throw new CollectionItemMappingException($key, $e);
-			}
-		});
+		return MultipleMappingException::map(
+			$value,
+			false,
+			fn (mixed $item, string|int $key) => CollectionItemMappingException::rethrow(
+				$key,
+				fn () => $itemAdapter->serialize($item)
+			)
+		);
 	}
 
 	/**
@@ -46,12 +47,13 @@ final class ArrayMapper
 	{
 		$itemAdapter = $serializer->adapter(PrimitiveTypeAdapter::class, $type->arguments[1]);
 
-		return MultipleMappingException::map($value, false, function (mixed $item, string|int $key) use ($itemAdapter) {
-			try {
-				return $itemAdapter->deserialize($item);
-			} catch (Exception $e) {
-				throw new CollectionItemMappingException($key, $e);
-			}
-		});
+		return MultipleMappingException::map(
+			$value,
+			false,
+			fn (mixed $item, string|int $key) => CollectionItemMappingException::rethrow(
+				$key,
+				fn () => $itemAdapter->deserialize($item)
+			)
+		);
 	}
 }
