@@ -371,8 +371,7 @@ There are some alternatives to this, but all of them will lack at least one of t
 - parses existing PHPDoc information instead of duplicating it through attributes
 - supports generic types which are extremely useful for wrapper types
 - allows simple extension through mappers and complex stuff through type adapters
-- produces developer-friendly error messages on invalid data
-- correctly handles optional and `null` values as separate concepts
+- produces developer-friendly error messages for invalid data
+- correctly handles optional (missing keys) and `null` values as separate concepts
 - simple to extend with additional formats
-- simple internal structure: no nodes, value wrappers or any limitations
-
+- simple internal structure: no node tree, no value wrappers, no PHP parsing, no inherent limitations

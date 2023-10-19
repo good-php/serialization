@@ -14,7 +14,7 @@ use Illuminate\Support\Arr;
 
 final class MemoizingTypeAdapterRegistry implements TypeAdapterRegistry
 {
-	/** @var array<class-string, array<>> */
+	/** @var array<class-string, array<string, \WeakMap<object, array<int, array{ object[], TypeAdapter }>>>> */
 	private array $resolved = [];
 
 	public function __construct(
