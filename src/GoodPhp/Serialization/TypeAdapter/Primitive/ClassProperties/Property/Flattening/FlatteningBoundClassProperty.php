@@ -31,7 +31,7 @@ class FlatteningBoundClassProperty implements BoundClassProperty
 
 		Assert::isArray($serialized, 'Serialized value for #[Flatten] property must be an array, [' . gettype($serialized) . '] given.');
 
-		return $this->typeAdapter->serialize($value);
+		return $serialized;
 	}
 
 	public function deserialize(array $data): array
