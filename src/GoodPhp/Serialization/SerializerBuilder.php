@@ -149,7 +149,6 @@ final class SerializerBuilder
 			->addMapperLast(new ArrayMapper())
 			->addMapperLast(new CollectionMapper())
 			->addMapperLast(new DateTimeMapper())
-			->addMapperLast(new CarbonMapper())
 			->addFactoryLast(new ClassPropertiesPrimitiveTypeAdapterFactory(
 				new SerializedNameAttributeNamingStrategy($this->namingStrategy ?? BuiltInNamingStrategy::PRESERVING),
 				$this->hydrator ?? new ConstructorHydrator(),

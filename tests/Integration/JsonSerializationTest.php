@@ -82,13 +82,13 @@ class JsonSerializationTest extends TestCase
 		yield 'DateTime' => [
 			DateTime::class,
 			new DateTime('2020-01-01 00:00:00'),
-			'"2020-01-01T00:00:00.000+00:00"',
+			'"2020-01-01T00:00:00.000000Z"',
 		];
 
 		yield 'nullable DateTime' => [
 			new NullableType(new NamedType(DateTime::class)),
 			new DateTime('2020-01-01 00:00:00'),
-			'"2020-01-01T00:00:00.000+00:00"',
+			'"2020-01-01T00:00:00.000000Z"',
 		];
 
 		yield 'nullable DateTime with null value' => [
@@ -114,7 +114,7 @@ class JsonSerializationTest extends TestCase
 				new NamedType(DateTime::class)
 			),
 			[new DateTime('2020-01-01 00:00:00')],
-			'["2020-01-01T00:00:00.000+00:00"]',
+			'["2020-01-01T00:00:00.000000Z"]',
 		];
 
 		yield 'Collection of DateTime' => [
@@ -126,7 +126,7 @@ class JsonSerializationTest extends TestCase
 				])
 			),
 			new Collection([new DateTime('2020-01-01 00:00:00')]),
-			'["2020-01-01T00:00:00.000+00:00"]',
+			'["2020-01-01T00:00:00.000000Z"]',
 		];
 
 		yield 'ClassStub with all fields' => [
@@ -146,7 +146,7 @@ class JsonSerializationTest extends TestCase
 				new NestedStub('flattened'),
 				new CarbonImmutable('2020-01-01 00:00:00')
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000000Z","optional":123,"nullable":123,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
 		];
 
 		yield 'ClassStub with empty optional and null nullable' => [
@@ -166,7 +166,7 @@ class JsonSerializationTest extends TestCase
 				new NestedStub('flattened'),
 				new CarbonImmutable('2020-01-01 00:00:00')
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000000Z","nullable":null,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
 		];
 	}
 
@@ -229,13 +229,13 @@ class JsonSerializationTest extends TestCase
 		yield 'DateTime' => [
 			DateTime::class,
 			new DateTime('2020-01-01 00:00:00'),
-			'"2020-01-01T00:00:00.000+00:00"',
+			'"2020-01-01T00:00:00.000000Z"',
 		];
 
 		yield 'nullable DateTime' => [
 			new NullableType(new NamedType(DateTime::class)),
 			new DateTime('2020-01-01 00:00:00'),
-			'"2020-01-01T00:00:00.000+00:00"',
+			'"2020-01-01T00:00:00.000000Z"',
 		];
 
 		yield 'nullable DateTime with null value' => [
@@ -261,7 +261,7 @@ class JsonSerializationTest extends TestCase
 				new NamedType(DateTime::class)
 			),
 			[new DateTime('2020-01-01 00:00:00')],
-			'["2020-01-01T00:00:00.000+00:00"]',
+			'["2020-01-01T00:00:00.000000Z"]',
 		];
 
 		yield 'Collection of DateTime' => [
@@ -273,7 +273,7 @@ class JsonSerializationTest extends TestCase
 				])
 			),
 			new Collection([new DateTime('2020-01-01 00:00:00')]),
-			'["2020-01-01T00:00:00.000+00:00"]',
+			'["2020-01-01T00:00:00.000000Z"]',
 		];
 
 		yield 'ClassStub with all fields' => [
@@ -293,7 +293,7 @@ class JsonSerializationTest extends TestCase
 				new NestedStub('flattened'),
 				new CarbonImmutable('2020-01-01 00:00:00')
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","optional":123,"nullable":123,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000000Z","optional":123,"nullable":123,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
 		];
 
 		yield 'ClassStub with empty optional and null nullable' => [
@@ -313,7 +313,7 @@ class JsonSerializationTest extends TestCase
 				new NestedStub('flattened'),
 				new CarbonImmutable('2020-01-01 00:00:00')
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","nullable":null,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000000Z","nullable":null,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
 		];
 
 		yield 'ClassStub with the least default fields' => [
@@ -333,7 +333,7 @@ class JsonSerializationTest extends TestCase
 				new NestedStub(),
 				new CarbonImmutable('2020-01-01 00:00:00')
 			),
-			'{"primitive":1,"nested":{},"date":"2020-01-01T00:00:00.000+00:00","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+			'{"primitive":1,"nested":{},"date":"2020-01-01T00:00:00.000000Z","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
 		];
 	}
 
@@ -436,7 +436,7 @@ class JsonSerializationTest extends TestCase
 			PrimitiveType::array(
 				new NamedType(DateTime::class)
 			),
-			'["2020-01-01T00:00:00.000+00:00", null]',
+			'["2020-01-01T00:00:00.000000Z", null]',
 		];
 
 		yield 'associative array of DateTime' => [
@@ -483,7 +483,7 @@ class JsonSerializationTest extends TestCase
 					new NamedType(DateTime::class),
 				])
 			),
-			'{"primitive":"1","nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000+00:00","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+			'{"primitive":"1","nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000000Z","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
 		];
 
 		yield 'ClassStub with wrong nested field type' => [
@@ -494,7 +494,7 @@ class JsonSerializationTest extends TestCase
 					new NamedType(DateTime::class),
 				])
 			),
-			'{"primitive":1,"nested":{"Field":123},"date":"2020-01-01T00:00:00.000+00:00","nullable":null,"carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+			'{"primitive":1,"nested":{"Field":123},"date":"2020-01-01T00:00:00.000000Z","nullable":null,"carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
 		];
 
 		yield 'ClassStub with wrong nested array field type' => [
