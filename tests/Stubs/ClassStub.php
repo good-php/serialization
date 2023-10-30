@@ -26,6 +26,8 @@ class ClassStub
 		#[Flatten]
 		public NestedStub            $flattened,
 		public readonly CarbonImmutable $carbonImmutable,
+		/** @var array<string, string> */
+		public readonly array $other = [],
 	)
 	{
 	}

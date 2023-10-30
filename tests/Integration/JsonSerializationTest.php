@@ -144,9 +144,10 @@ class JsonSerializationTest extends TestCase
 				123,
 				MissingValue::INSTANCE,
 				new NestedStub('flattened'),
-				new CarbonImmutable('2020-01-01 00:00:00')
+				new CarbonImmutable('2020-01-01 00:00:00'),
+				['Some key' => 'Some value']
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000000Z","optional":123,"nullable":123,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000000Z","optional":123,"nullable":123,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z","other":{"Some key":"Some value"}}',
 		];
 
 		yield 'ClassStub with empty optional and null nullable' => [
@@ -166,7 +167,7 @@ class JsonSerializationTest extends TestCase
 				new NestedStub('flattened'),
 				new CarbonImmutable('2020-01-01 00:00:00')
 			),
-			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000000Z","nullable":null,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+			'{"primitive":1,"nested":{"Field":"something"},"date":"2020-01-01T00:00:00.000000Z","nullable":null,"Field":"flattened","carbonImmutable":"2020-01-01T00:00:00.000000Z","other":{}}',
 		];
 	}
 

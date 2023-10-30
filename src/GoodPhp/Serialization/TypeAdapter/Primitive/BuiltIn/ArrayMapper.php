@@ -3,6 +3,7 @@
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn;
 
 use Exception;
+use GoodPhp\Reflection\Type\PrimitiveType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\Exception\CollectionItemMappingException;
@@ -21,8 +22,18 @@ final class ArrayMapper
 	 * @return array<mixed>
 	 */
 	#[MapTo(PrimitiveTypeAdapter::class)]
-	public function to(array $value, Type $type, Serializer $serializer): array
+	public function to(array $value, Type $type, Serializer $serializer): array|\stdClass
 	{
+		if ($value === []) {
+			// Make sure that map arrays are serialized as object. To do so, we'll return an stdClass instead of
+			// an array so the upper layer can serialize it as an object, not an empty array.
+			if ($type->arguments[0]->equals(PrimitiveType::string())) {
+				return new \stdClass();
+			}
+
+			return $value;
+		}
+
 		$itemAdapter = $serializer->adapter(PrimitiveTypeAdapter::class, $type->arguments[1]);
 
 		return MultipleMappingException::map(
@@ -45,6 +56,10 @@ final class ArrayMapper
 	#[MapFrom(PrimitiveTypeAdapter::class)]
 	public function from(array $value, Type $type, Serializer $serializer): array
 	{
+		if ($value === []) {
+			return $value;
+		}
+
 		$itemAdapter = $serializer->adapter(PrimitiveTypeAdapter::class, $type->arguments[1]);
 
 		return MultipleMappingException::map(
