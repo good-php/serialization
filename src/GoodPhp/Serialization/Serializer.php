@@ -14,10 +14,10 @@ interface Serializer
 	public function reflector(): Reflector;
 
 	/**
-	 * @template T
+	 * @template T of mixed
 	 * @template A of TypeAdapter<T>
 	 *
-	 * @param class-string<T>      $typeAdapterType
+	 * @param class-string<A>      $typeAdapterType
 	 * @param Type|class-string<T> $type
 	 *
 	 * @return A
