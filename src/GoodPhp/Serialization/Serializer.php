@@ -14,11 +14,14 @@ interface Serializer
 	public function reflector(): Reflector;
 
 	/**
-	 * @template T of mixed
-	 * @template A of TypeAdapter<T>
+	 * Get an adapter for specified type.
+	 *
+	 * It'd be nice to have generic $type here, but it's not possible.
+	 *
+	 * @template A of TypeAdapter<mixed, mixed>
 	 *
 	 * @param class-string<A>      $typeAdapterType
-	 * @param Type|class-string<T> $type
+	 * @param Type|class-string $type
 	 *
 	 * @return A
 	 */
