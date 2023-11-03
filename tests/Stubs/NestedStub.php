@@ -10,7 +10,5 @@ class NestedStub
 {
 	public function __construct(
 		public string $field = 'something',
-	)
-	{
-	}
+	) {}
 }

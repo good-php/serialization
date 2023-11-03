@@ -16,19 +16,17 @@ class ClassStub
 	 * @param T $generic
 	 */
 	public function __construct(
-		public int                   $primitive,
-		public NestedStub            $nested,
+		public int $primitive,
+		public NestedStub $nested,
 		#[SerializedName('date')]
-		public mixed                 $generic,
+		public mixed $generic,
 		public int|null|MissingValue $optional,
-		public ?int                  $nullable,
-		public int|MissingValue      $nonNullOptional,
+		public ?int $nullable,
+		public int|MissingValue $nonNullOptional,
 		#[Flatten]
-		public NestedStub            $flattened,
+		public NestedStub $flattened,
 		public readonly CarbonImmutable $carbonImmutable,
 		/** @var array<string, string> */
 		public readonly array $other = [],
-	)
-	{
-	}
+	) {}
 }

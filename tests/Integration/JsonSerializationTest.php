@@ -5,7 +5,6 @@ namespace Tests\Integration;
 use Carbon\CarbonImmutable;
 use DateTime;
 use Exception;
-use Generator;
 use GoodPhp\Reflection\Type\Combinatorial\UnionType;
 use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\PrimitiveType;
@@ -41,7 +40,7 @@ class JsonSerializationTest extends TestCase
 		self::assertSame($expectedSerialized, $adapter->serialize($data));
 	}
 
-	public function serializesProvider(): Generator
+	public static function serializesProvider(): iterable
 	{
 		yield 'int' => [
 			'int',
@@ -183,7 +182,7 @@ class JsonSerializationTest extends TestCase
 		self::assertEquals($expectedData, $adapter->deserialize($serialized));
 	}
 
-	public function deserializesProvider(): Generator
+	public static function deserializesProvider(): iterable
 	{
 		yield 'int' => [
 			'int',
@@ -356,7 +355,7 @@ class JsonSerializationTest extends TestCase
 		}
 	}
 
-	public function deserializesWithAnExceptionProvider(): Generator
+	public static function deserializesWithAnExceptionProvider(): iterable
 	{
 		yield 'int' => [
 			new UnexpectedTypeException('123', PrimitiveType::integer()),
