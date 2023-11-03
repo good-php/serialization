@@ -2,8 +2,10 @@
 
 namespace Tests\Stubs;
 
+use Carbon\CarbonImmutable;
+use GoodPhp\Serialization\MissingValue;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\SerializedName;
-use TenantCloud\Standard\Optional\Optional;
+use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\Flattening\Flatten;
 
 /**
  * @template T
@@ -11,16 +13,20 @@ use TenantCloud\Standard\Optional\Optional;
 class ClassStub
 {
 	/**
-	 * @param T             $generic
-	 * @param Optional<int> $optional
+	 * @param T $generic
 	 */
 	public function __construct(
 		public int $primitive,
 		public NestedStub $nested,
 		#[SerializedName('date')]
 		public mixed $generic,
-		public Optional $optional,
+		public int|null|MissingValue $optional,
 		public ?int $nullable,
-	) {
-	}
+		public int|MissingValue $nonNullOptional,
+		#[Flatten]
+		public NestedStub $flattened,
+		public readonly CarbonImmutable $carbonImmutable,
+		/** @var array<string, string> */
+		public readonly array $other = [],
+	) {}
 }

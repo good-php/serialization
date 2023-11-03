@@ -13,9 +13,6 @@ class ValueEnumStub extends ValueEnum
 
 	public static self $TWO;
 
-	/**
-	 * @inheritDoc
-	 */
 	protected static function initializeInstances(): void
 	{
 		self::$ONE = new self('one');
