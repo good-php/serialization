@@ -13,7 +13,7 @@ use GoodPhp\Serialization\TypeAdapter\TypeAdapter as T;
 interface TypeAdapterFactory
 {
 	/**
-	 * @param class-string<T> $typeAdapterType
+	 * @param class-string<TypeAdapter<mixed, mixed>> $typeAdapterType
 	 *
 	 * @return T|null
 	 */

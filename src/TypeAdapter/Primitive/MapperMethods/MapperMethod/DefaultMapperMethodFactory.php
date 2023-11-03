@@ -3,6 +3,7 @@
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapperMethod;
 
 use GoodPhp\Reflection\Reflection\MethodReflection;
+use GoodPhp\Reflection\Reflection\Methods\HasMethods;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\Acceptance\AcceptanceStrategy;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\Acceptance\BaseTypeEqualsAcceptanceStrategy;
@@ -40,6 +41,12 @@ class DefaultMapperMethodFactory implements MapperMethodFactory
 		);
 	}
 
+	/**
+	 * @template AdapterType of object
+	 *
+	 * @param AdapterType                                            $adapter
+	 * @param MethodReflection<AdapterType, HasMethods<AdapterType>> $method
+	 */
 	public function create(
 		object $adapter,
 		MethodReflection $method,

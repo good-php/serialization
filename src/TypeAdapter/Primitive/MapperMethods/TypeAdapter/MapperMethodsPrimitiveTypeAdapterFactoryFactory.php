@@ -30,6 +30,7 @@ final class MapperMethodsPrimitiveTypeAdapterFactoryFactory
 				->map(fn (MethodReflection $method) => $this->mapperMethodFactory->createTo(
 					$adapter,
 					$method,
+					/* @phpstan-ignore-next-line argument.type */
 					$method->attributes()->sole(MapTo::class),
 				)),
 			$reflection->methods()
@@ -37,6 +38,7 @@ final class MapperMethodsPrimitiveTypeAdapterFactoryFactory
 				->map(fn (MethodReflection $method) => $this->mapperMethodFactory->createFrom(
 					$adapter,
 					$method,
+					/* @phpstan-ignore-next-line argument.type */
 					$method->attributes()->sole(MapFrom::class)
 				)),
 		);

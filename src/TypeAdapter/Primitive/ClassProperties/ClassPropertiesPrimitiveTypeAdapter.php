@@ -29,9 +29,6 @@ final class ClassPropertiesPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 		private readonly Collection $properties,
 	) {}
 
-	/**
-	 * @param T $value
-	 */
 	public function serialize(mixed $value): mixed
 	{
 		return MultipleMappingException::map(

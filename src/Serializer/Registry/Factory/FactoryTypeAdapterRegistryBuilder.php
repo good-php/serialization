@@ -16,7 +16,9 @@ final class FactoryTypeAdapterRegistryBuilder
 	) {}
 
 	/**
-	 * @param TypeAdapterFactory<TypeAdapter<mixed, mixed>> $factory
+	 * @template A of TypeAdapter<mixed, mixed>
+	 *
+	 * @param TypeAdapterFactory<A> $factory
 	 */
 	public function addFactory(TypeAdapterFactory $factory): self
 	{
@@ -32,7 +34,9 @@ final class FactoryTypeAdapterRegistryBuilder
 	}
 
 	/**
-	 * @param TypeAdapterFactory<TypeAdapter<mixed, mixed>> $factory
+	 * @template A of TypeAdapter<mixed, mixed>
+	 *
+	 * @param TypeAdapterFactory<A> $factory
 	 */
 	public function addFactoryLast(TypeAdapterFactory $factory): self
 	{

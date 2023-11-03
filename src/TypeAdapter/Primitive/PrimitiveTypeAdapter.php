@@ -7,7 +7,7 @@ use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 /**
  * @template T
  *
- * @implements TypeAdapter<T, mixed>
+ * @extends TypeAdapter<T, mixed>
  */
 interface PrimitiveTypeAdapter extends TypeAdapter
 {

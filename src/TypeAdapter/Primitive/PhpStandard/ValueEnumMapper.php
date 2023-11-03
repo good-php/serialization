@@ -32,12 +32,9 @@ final class ValueEnumMapper
 	}
 
 	/**
-	 * @template TEnumValue of string|int
+	 * @param NamedType $type
 	 *
-	 * @param TEnumValue $value
-	 * @param NamedType  $type
-	 *
-	 * @return ValueEnum<TEnumValue>
+	 * @return ValueEnum<string|int>
 	 */
 	#[MapFrom(PrimitiveTypeAdapter::class, new BaseTypeAcceptedByAcceptanceStrategy(ValueEnum::class))]
 	public function from(string|int $value, Type $type): ValueEnum

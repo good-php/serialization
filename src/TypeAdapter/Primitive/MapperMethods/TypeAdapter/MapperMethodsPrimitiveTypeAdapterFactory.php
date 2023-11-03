@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
 use Webmozart\Assert\Assert;
 
 /**
- * @implements TypeAdapterFactory<MapperMethodsPrimitiveTypeAdapter>
+ * @implements TypeAdapterFactory<MapperMethodsPrimitiveTypeAdapter<mixed>>
  */
 final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFactory
 {

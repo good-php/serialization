@@ -5,6 +5,7 @@ namespace GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapperMethod
 use GoodPhp\Reflection\Reflection\Attributes\Attributes;
 use GoodPhp\Reflection\Reflection\FunctionParameterReflection;
 use GoodPhp\Reflection\Reflection\MethodReflection;
+use GoodPhp\Reflection\Reflection\Methods\HasMethods;
 use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
@@ -14,8 +15,15 @@ use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\TypeAdapter\Mapper
 use TypeError;
 use Webmozart\Assert\Assert;
 
+/**
+ * @template AdapterType of object
+ */
 final class InstanceMapperMethod implements MapperMethod
 {
+	/**
+	 * @param AdapterType                                            $adapter
+	 * @param MethodReflection<AdapterType, HasMethods<AdapterType>> $method
+	 */
 	public function __construct(
 		private readonly MethodReflection $method,
 		private readonly object $adapter,
@@ -59,7 +67,8 @@ final class InstanceMapperMethod implements MapperMethod
 				throw $e;
 			}
 
-			throw new UnexpectedTypeException($value, $this->method->parameters()->first()->type());
+			/* @phpstan-ignore-next-line argument.type */
+			throw new UnexpectedTypeException($value, $this->method->parameters()->firstOrFail()->type());
 		}
 	}
 }
