@@ -2,6 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn;
 
+use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\PrimitiveType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
@@ -17,7 +18,8 @@ final class ArrayMapper
 	/**
 	 * @template T
 	 *
-	 * @param array<T> $value
+	 * @param array<T>  $value
+	 * @param NamedType $type
 	 *
 	 * @return array<mixed>
 	 */
@@ -47,11 +49,10 @@ final class ArrayMapper
 	}
 
 	/**
-	 * @template T
-	 *
 	 * @param array<mixed> $value
+	 * @param NamedType    $type
 	 *
-	 * @return array<T>
+	 * @return array<mixed>
 	 */
 	#[MapFrom(PrimitiveTypeAdapter::class)]
 	public function from(array $value, Type $type, Serializer $serializer): array

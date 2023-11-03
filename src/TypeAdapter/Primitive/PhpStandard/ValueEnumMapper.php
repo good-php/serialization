@@ -2,6 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\PhpStandard;
 
+use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedEnumValueException;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\Acceptance\BaseTypeAcceptedByAcceptanceStrategy;
@@ -17,8 +18,12 @@ use TenantCloud\Standard\Enum\ValueNotFoundException;
 final class ValueEnumMapper
 {
 	/**
-	 * @template TEnumValue
+	 * @template TEnumValue of string|int
 	 * @template TEnum of ValueEnum<TEnumValue>
+	 *
+	 * @param TEnum $value
+	 *
+	 * @return TEnumValue
 	 */
 	#[MapTo(PrimitiveTypeAdapter::class, new BaseTypeAcceptedByAcceptanceStrategy(ValueEnum::class))]
 	public function to(ValueEnum $value): string|int
@@ -27,8 +32,12 @@ final class ValueEnumMapper
 	}
 
 	/**
-	 * @template TEnumValue
-	 * @template TEnum of ValueEnum<TEnumValue>
+	 * @template TEnumValue of string|int
+	 *
+	 * @param TEnumValue $value
+	 * @param NamedType  $type
+	 *
+	 * @return ValueEnum<TEnumValue>
 	 */
 	#[MapFrom(PrimitiveTypeAdapter::class, new BaseTypeAcceptedByAcceptanceStrategy(ValueEnum::class))]
 	public function from(string|int $value, Type $type): ValueEnum

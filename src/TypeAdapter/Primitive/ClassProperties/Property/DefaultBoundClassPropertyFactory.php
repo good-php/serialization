@@ -2,6 +2,7 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property;
 
+use GoodPhp\Reflection\Reflection\Properties\HasProperties;
 use GoodPhp\Reflection\Reflection\PropertyReflection;
 use GoodPhp\Reflection\Type\Combinatorial\UnionType;
 use GoodPhp\Reflection\Type\NamedType;
@@ -11,6 +12,7 @@ use GoodPhp\Serialization\MissingValue;
 use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\Flattening\Flatten;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\Flattening\FlatteningBoundClassProperty;
+use Webmozart\Assert\Assert;
 
 class DefaultBoundClassPropertyFactory implements BoundClassPropertyFactory
 {
@@ -27,7 +29,11 @@ class DefaultBoundClassPropertyFactory implements BoundClassPropertyFactory
 		PropertyReflection $property,
 		Serializer $serializer
 	): BoundClassProperty {
-		[$type, $optional] = $this->removeMissingValueType($property->type(), $serializer);
+		$type = $property->type();
+
+		Assert::notNull($type, 'Property [' . $property->location() . '] must have it\'s type specified.');
+
+		[$type, $optional] = $this->removeMissingValueType($type, $serializer);
 
 		$typeAdapter = $serializer->adapter($typeAdapterType, $type, $property->attributes());
 
@@ -51,6 +57,8 @@ class DefaultBoundClassPropertyFactory implements BoundClassPropertyFactory
 	 *
 	 * For type `MissingValue|int` returns [int, true]
 	 * For type `int|null` returns [int|null, false]
+	 *
+	 * @return array{ Type, bool }
 	 */
 	private function removeMissingValueType(Type $type, Serializer $serializer): array
 	{
@@ -71,6 +79,9 @@ class DefaultBoundClassPropertyFactory implements BoundClassPropertyFactory
 		return [$type->withoutType($this->missingValueType), true];
 	}
 
+	/**
+	 * @param PropertyReflection<object, HasProperties<object>> $property
+	 */
 	private function hasDefaultValue(PropertyReflection $property): bool
 	{
 		return $property->hasDefaultValue() || $property->promotedParameter()?->hasDefaultValue();

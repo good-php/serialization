@@ -4,7 +4,6 @@ namespace GoodPhp\Serialization;
 
 use GoodPhp\Reflection\Reflector;
 use GoodPhp\Reflection\ReflectorBuilder;
-use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Hydration\ConstructorHydrator;
 use GoodPhp\Serialization\Hydration\Hydrator;
 use GoodPhp\Serialization\Serializer\Registry\Cache\MemoizingTypeAdapterRegistry;
@@ -89,6 +88,9 @@ final class SerializerBuilder
 		return $that;
 	}
 
+	/**
+	 * @param TypeAdapterFactory<TypeAdapter<mixed, mixed>> $factory
+	 */
 	public function addFactory(TypeAdapterFactory $factory): self
 	{
 		$that = clone $this;
@@ -106,16 +108,8 @@ final class SerializerBuilder
 	}
 
 	/**
-	 * @param class-string<object> $attribute
+	 * @param TypeAdapterFactory<TypeAdapter<mixed, mixed>> $factory
 	 */
-	public function add(string $typeAdapterType, Type $type, string $attribute, TypeAdapter $adapter): self
-	{
-		$that = clone $this;
-		$that->typeAdapterRegistryBuilder = $that->typeAdapterRegistryBuilder()->add($typeAdapterType, $type, $attribute, $adapter);
-
-		return $that;
-	}
-
 	public function addFactoryLast(TypeAdapterFactory $factory): self
 	{
 		$that = clone $this;
@@ -128,17 +122,6 @@ final class SerializerBuilder
 	{
 		$that = clone $this;
 		$that->typeAdapterRegistryBuilder = $that->typeAdapterRegistryBuilder()->addMapperLast($adapter);
-
-		return $that;
-	}
-
-	/**
-	 * @param class-string<object> $attribute
-	 */
-	public function addLast(string $typeAdapterType, Type $type, string $attribute, TypeAdapter $adapter): self
-	{
-		$that = clone $this;
-		$that->typeAdapterRegistryBuilder = $that->typeAdapterRegistryBuilder()->addLast($typeAdapterType, $type, $attribute, $adapter);
 
 		return $that;
 	}

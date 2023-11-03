@@ -8,14 +8,14 @@ use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter as T;
 
 /**
- * @template T of TypeAdapter
+ * @template-covariant T of TypeAdapter
  */
 interface TypeAdapterFactory
 {
 	/**
-	 * @param class-string<TypeAdapter> $typeAdapterType
+	 * @param class-string<T> $typeAdapterType
 	 *
 	 * @return T|null
 	 */
-	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer);
+	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?TypeAdapter;
 }

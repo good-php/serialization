@@ -3,6 +3,7 @@
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn;
 
 use BackedEnum;
+use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedEnumValueException;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\Acceptance\BaseTypeAcceptedByAcceptanceStrategy;
@@ -10,15 +11,8 @@ use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapFrom;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapTo;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
 
-/**
- * {@see BackedEnum}.
- */
 final class BackedEnumMapper
 {
-	/**
-	 * @template TEnumValue
-	 * @template TEnum of BackedEnum<TEnumValue>
-	 */
 	#[MapTo(PrimitiveTypeAdapter::class, new BaseTypeAcceptedByAcceptanceStrategy(BackedEnum::class))]
 	public function to(BackedEnum $value): string|int
 	{
@@ -26,8 +20,7 @@ final class BackedEnumMapper
 	}
 
 	/**
-	 * @template TEnumValue
-	 * @template TEnum of BackedEnum<TEnumValue>
+	 * @param NamedType $type
 	 */
 	#[MapFrom(PrimitiveTypeAdapter::class, new BaseTypeAcceptedByAcceptanceStrategy(BackedEnum::class))]
 	public function from(string|int $value, Type $type): BackedEnum

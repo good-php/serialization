@@ -34,6 +34,7 @@ final class InstanceMapperMethod implements MapperMethod
 			MapperMethodsPrimitiveTypeAdapterFactory::class => $skipPast,
 			Serializer::class                               => $serializer,
 			Type::class                                     => $type,
+			NamedType::class                                => $type,
 			Attributes::class                               => $attributes,
 		];
 

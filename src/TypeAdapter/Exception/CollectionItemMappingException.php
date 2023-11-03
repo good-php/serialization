@@ -11,7 +11,7 @@ class CollectionItemMappingException extends RuntimeException
 {
 	public function __construct(
 		public readonly string|int $key,
-		Throwable $previous
+		public readonly Throwable $previous
 	) {
 		parent::__construct("Could not map item at key '{$key}': {$previous->getMessage()}", 0, $previous);
 	}
@@ -21,9 +21,9 @@ class CollectionItemMappingException extends RuntimeException
 		try {
 			return $callback();
 		} catch (PropertyMappingException $e) {
-			throw new self($key . '.' . $e->path, $e->getPrevious());
+			throw new self($key . '.' . $e->path, $e->previous);
 		} catch (CollectionItemMappingException $e) {
-			throw new self($key . '.' . $e->key, $e->getPrevious());
+			throw new self($key . '.' . $e->key, $e->previous);
 		} catch (Exception $e) {
 			throw new self($key, $e);
 		}

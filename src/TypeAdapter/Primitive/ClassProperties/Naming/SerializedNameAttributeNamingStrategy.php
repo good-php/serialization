@@ -2,6 +2,8 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming;
 
+use GoodPhp\Reflection\Reflection\Attributes\HasAttributes;
+use GoodPhp\Reflection\Reflection\Properties\HasProperties;
 use GoodPhp\Reflection\Reflection\PropertyReflection;
 use Webmozart\Assert\Assert;
 
@@ -24,12 +26,21 @@ class SerializedNameAttributeNamingStrategy implements NamingStrategy
 		return $serializedName->nameOrStrategy;
 	}
 
+	/**
+	 * @param PropertyReflection<object, HasProperties<object>> $property
+	 */
 	private function findSerializedName(PropertyReflection $property): ?SerializedName
 	{
 		$serializedName = $property->attributes()->sole(SerializedName::class);
 
 		if (!$serializedName) {
-			$serializedName = $property->declaringType()->attributes()->sole(SerializedName::class);
+			$declaringType = $property->declaringType();
+
+			if (!$declaringType instanceof HasAttributes) {
+				return $serializedName;
+			}
+
+			$serializedName = $declaringType->attributes()->sole(SerializedName::class);
 
 			Assert::nullOrIsInstanceOf(
 				$serializedName?->nameOrStrategy,

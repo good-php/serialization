@@ -7,6 +7,9 @@ use Throwable;
 
 class UnexpectedEnumValueException extends RuntimeException implements UnexpectedValueException
 {
+	/**
+	 * @param array<int, int|string> $expectedValues
+	 */
 	public function __construct(
 		public readonly string|int $value,
 		public readonly array $expectedValues,

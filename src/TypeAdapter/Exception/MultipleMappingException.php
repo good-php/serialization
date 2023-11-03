@@ -6,9 +6,13 @@ use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use RuntimeException;
+use Webmozart\Assert\Assert;
 
 class MultipleMappingException extends RuntimeException
 {
+	/**
+	 * @param array<int, Exception> $exceptions
+	 */
 	public function __construct(
 		public readonly array $exceptions,
 	) {
@@ -21,6 +25,17 @@ class MultipleMappingException extends RuntimeException
 		);
 	}
 
+	/**
+	 * @template TKey
+	 * @template TValue
+	 * @template TReturnKey
+	 * @template TReturnValue
+	 *
+	 * @param iterable<TKey, TValue>                                                    $items
+	 * @param callable(TValue, TKey): (iterable<TReturnKey, TReturnValue>|TReturnValue) $callable
+	 *
+	 * @return ($withKeys is true ? array<TReturnKey, TReturnValue> : array<TKey, TReturnValue>)
+	 */
 	public static function map(iterable $items, bool $withKeys, callable $callable): array
 	{
 		$data = [];
@@ -32,6 +47,8 @@ class MultipleMappingException extends RuntimeException
 					$result = $callable($item, $key);
 
 					if ($withKeys) {
+						Assert::isIterable($result);
+
 						foreach ($result as $mapKey => $mapValue) {
 							$data[$mapKey] = $mapValue;
 						}
@@ -48,6 +65,7 @@ class MultipleMappingException extends RuntimeException
 		}
 
 		if (empty($exceptions)) {
+			/* @phpstan-ignore-next-line method.returnType */
 			return $data;
 		}
 
@@ -55,6 +73,7 @@ class MultipleMappingException extends RuntimeException
 			throw $exceptions[0];
 		}
 
+		/* @phpstan-ignore-next-line deadCode.unreachable */
 		throw new self($exceptions);
 	}
 }

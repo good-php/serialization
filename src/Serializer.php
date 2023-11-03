@@ -20,8 +20,11 @@ interface Serializer
 	 *
 	 * @template A of TypeAdapter<mixed, mixed>
 	 *
-	 * @param class-string<A>   $typeAdapterType
-	 * @param Type|class-string $type
+	 * @param class-string<A>                                    $typeAdapterType
+	 * @param Type|class-string                                  $type
+	 * @param TypeAdapterFactory<TypeAdapter<mixed, mixed>>|null $skipPast
+	 *
+	 * @return A
 	 */
 	public function adapter(string $typeAdapterType, Type|string $type, Attributes $attributes = new ArrayAttributes(), TypeAdapterFactory $skipPast = null): TypeAdapter;
 }

@@ -8,11 +8,13 @@ use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapperMethod\MapperMethod;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
-use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 use Illuminate\Support\Collection;
 use Webmozart\Assert\Assert;
 
+/**
+ * @implements TypeAdapterFactory<MapperMethodsPrimitiveTypeAdapter>
+ */
 final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFactory
 {
 	public function __construct(
@@ -24,7 +26,7 @@ final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFacto
 		Assert::true($this->toMappers->isNotEmpty() || $this->fromMappers->isNotEmpty());
 	}
 
-	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?TypeAdapter
+	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?MapperMethodsPrimitiveTypeAdapter
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NamedType) {
 			return null;

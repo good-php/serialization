@@ -2,13 +2,23 @@
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\Flattening;
 
+use GoodPhp\Reflection\Reflection\Properties\HasProperties;
 use GoodPhp\Reflection\Reflection\PropertyReflection;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\BoundClassProperty;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use Webmozart\Assert\Assert;
 
+/**
+ * @template-contravariant T of object
+ *
+ * @implements BoundClassProperty<T>
+ */
 class FlatteningBoundClassProperty implements BoundClassProperty
 {
+	/**
+	 * @param PropertyReflection<T, HasProperties<T>> $property
+	 * @param TypeAdapter<mixed, mixed>               $typeAdapter
+	 */
 	public function __construct(
 		private readonly PropertyReflection $property,
 		private readonly TypeAdapter $typeAdapter,
@@ -28,6 +38,7 @@ class FlatteningBoundClassProperty implements BoundClassProperty
 		$serialized = $this->typeAdapter->serialize($value);
 
 		Assert::isArray($serialized, 'Serialized value for #[Flatten] property must be an array, [' . gettype($serialized) . '] given.');
+		Assert::isMap($serialized, 'Serialized value for #[Flatten] property must be an associative array.');
 
 		return $serialized;
 	}

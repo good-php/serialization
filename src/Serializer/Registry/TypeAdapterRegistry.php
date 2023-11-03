@@ -12,9 +12,10 @@ use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 interface TypeAdapterRegistry
 {
 	/**
-	 * @template TypeAdapterType
+	 * @template TypeAdapterType of TypeAdapter<mixed, mixed>
 	 *
-	 * @param class-string<TypeAdapterType> $typeAdapterType
+	 * @param class-string<TypeAdapterType>                      $typeAdapterType
+	 * @param TypeAdapterFactory<TypeAdapter<mixed, mixed>>|null $skipPast
 	 *
 	 * @return TypeAdapterType
 	 */

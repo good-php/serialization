@@ -7,7 +7,7 @@ use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 /**
  * @template T Type being serialized
  *
- * @implements TypeAdapter<T, string>
+ * @extends TypeAdapter<T, string>
  */
 interface JsonTypeAdapter extends TypeAdapter
 {

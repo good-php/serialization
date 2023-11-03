@@ -19,13 +19,6 @@ final class TypeAdapterRegistrySerializer implements Serializer
 		private readonly Reflector $reflector,
 	) {}
 
-	/**
-	 * @template T
-	 * @template A of TypeAdapter<T>
-	 *
-	 * @param class-string<T>      $typeAdapterType
-	 * @param Type|class-string<T> $type
-	 */
 	public function adapter(string $typeAdapterType, Type|string $type, Attributes $attributes = new ArrayAttributes(), TypeAdapterFactory $skipPast = null): TypeAdapter
 	{
 		if (is_string($type)) {

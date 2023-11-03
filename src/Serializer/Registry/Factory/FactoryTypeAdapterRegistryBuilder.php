@@ -2,21 +2,22 @@
 
 namespace GoodPhp\Serialization\Serializer\Registry\Factory;
 
-use GoodPhp\Reflection\Type\Type;
-use GoodPhp\Serialization\TypeAdapter\MatchingDelegate\MatchingDelegateTypeAdapterFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\TypeAdapter\MapperMethodsPrimitiveTypeAdapterFactoryFactory;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 
 final class FactoryTypeAdapterRegistryBuilder
 {
-	/** @var TypeAdapterFactory[] */
+	/** @var array<int, TypeAdapterFactory<TypeAdapter<mixed, mixed>>> */
 	private array $factories = [];
 
 	public function __construct(
 		private readonly MapperMethodsPrimitiveTypeAdapterFactoryFactory $mapperMethodsTypeAdapterFactoryFactory,
 	) {}
 
+	/**
+	 * @param TypeAdapterFactory<TypeAdapter<mixed, mixed>> $factory
+	 */
 	public function addFactory(TypeAdapterFactory $factory): self
 	{
 		$that = clone $this;
@@ -31,13 +32,8 @@ final class FactoryTypeAdapterRegistryBuilder
 	}
 
 	/**
-	 * @param class-string<object> $attribute
+	 * @param TypeAdapterFactory<TypeAdapter<mixed, mixed>> $factory
 	 */
-	public function add(string $typeAdapterType, Type $type, string $attribute, TypeAdapter $adapter): self
-	{
-		return $this->addFactory(new MatchingDelegateTypeAdapterFactory($typeAdapterType, $type, $attribute, $adapter));
-	}
-
 	public function addFactoryLast(TypeAdapterFactory $factory): self
 	{
 		$that = clone $this;
@@ -49,14 +45,6 @@ final class FactoryTypeAdapterRegistryBuilder
 	public function addMapperLast(object $adapter): self
 	{
 		return $this->addFactoryLast($this->mapperMethodsTypeAdapterFactoryFactory->create($adapter));
-	}
-
-	/**
-	 * @param class-string<object> $attribute
-	 */
-	public function addLast(string $typeAdapterType, Type $type, string $attribute, TypeAdapter $adapter): self
-	{
-		return $this->addFactoryLast(new MatchingDelegateTypeAdapterFactory($typeAdapterType, $type, $attribute, $adapter));
 	}
 
 	public function build(): FactoryTypeAdapterRegistry

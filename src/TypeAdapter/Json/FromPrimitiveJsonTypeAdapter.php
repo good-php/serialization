@@ -11,6 +11,9 @@ use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
  */
 final class FromPrimitiveJsonTypeAdapter implements JsonTypeAdapter
 {
+	/**
+	 * @param PrimitiveTypeAdapter<T> $primitiveDelegate
+	 */
 	public function __construct(
 		private readonly PrimitiveTypeAdapter $primitiveDelegate,
 	) {}

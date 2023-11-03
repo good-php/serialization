@@ -4,6 +4,7 @@ namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties;
 
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property;
 
+use GoodPhp\Reflection\Reflection\Properties\HasProperties;
 use GoodPhp\Reflection\Reflection\PropertyReflection;
 use GoodPhp\Serialization\MissingValue;
 use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedValueException;
@@ -18,12 +19,16 @@ use Webmozart\Assert\Assert;
  *   - default property values
  *   - optional values
  *
- * @template T of object
+ * @template-contravariant T of object
  *
  * @template-implements BoundClassProperty<T>
  */
 final class DefaultBoundClassProperty implements BoundClassProperty
 {
+	/**
+	 * @param PropertyReflection<T, HasProperties<T>> $property
+	 * @param TypeAdapter<mixed, mixed>               $typeAdapter
+	 */
 	public function __construct(
 		private readonly PropertyReflection $property,
 		private readonly TypeAdapter $typeAdapter,

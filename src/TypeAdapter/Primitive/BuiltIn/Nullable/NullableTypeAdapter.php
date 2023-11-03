@@ -4,8 +4,16 @@ namespace GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\Nullable;
 
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
 
+/**
+ * @template T Type being serialized
+ *
+ * @implements PrimitiveTypeAdapter<T|null>
+ */
 class NullableTypeAdapter implements PrimitiveTypeAdapter
 {
+	/**
+	 * @param PrimitiveTypeAdapter<T> $delegate
+	 */
 	public function __construct(
 		private readonly PrimitiveTypeAdapter $delegate,
 	) {}

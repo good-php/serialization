@@ -11,7 +11,7 @@ use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 /**
  * Serializes to JSON by first serializing to primitives and then just encoding with json_encode().
  *
- * @implements TypeAdapterFactory<JsonTypeAdapter>
+ * @implements TypeAdapterFactory<JsonTypeAdapter<mixed>>
  */
 final class FromPrimitiveJsonTypeAdapterFactory implements TypeAdapterFactory
 {

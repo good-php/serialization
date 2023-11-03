@@ -3,7 +3,7 @@
 namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property;
 
 /**
- * @template T of object
+ * @template-contravariant T of object
  */
 interface BoundClassProperty
 {
@@ -21,7 +21,7 @@ interface BoundClassProperty
 	 * Deserialize object property from arrayed data into an array of object properties.
 	 * It may be empty if property needs to be excluded from being set on hydration.
 	 *
-	 * @param array<string, mixed> Serialized data
+	 * @param array<string, mixed> $data Serialized data
 	 *
 	 * @return array<string, mixed> Resulting deserialized data with keys being property names
 	 */

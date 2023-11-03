@@ -14,6 +14,9 @@ use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\BoundCl
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 
+/**
+ * @implements TypeAdapterFactory<ClassPropertiesPrimitiveTypeAdapter<object>>
+ */
 final class ClassPropertiesPrimitiveTypeAdapterFactory implements TypeAdapterFactory
 {
 	public function __construct(
@@ -22,7 +25,7 @@ final class ClassPropertiesPrimitiveTypeAdapterFactory implements TypeAdapterFac
 		private readonly BoundClassPropertyFactory $boundClassPropertyFactory,
 	) {}
 
-	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer)
+	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?ClassPropertiesPrimitiveTypeAdapter
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NamedType) {
 			return null;
@@ -34,10 +37,13 @@ final class ClassPropertiesPrimitiveTypeAdapterFactory implements TypeAdapterFac
 			return null;
 		}
 
+		/** @var class-string<object> $className */
+		$className = $reflection->qualifiedName();
+
 		return new ClassPropertiesPrimitiveTypeAdapter(
 			$this->hydrator,
-			$reflection->qualifiedName(),
-			$reflection->properties()->map(function (PropertyReflection $property) use ($serializer, $typeAdapterType, $attributes) {
+			$className,
+			$reflection->properties()->map(function (PropertyReflection $property) use ($serializer, $typeAdapterType) {
 				$serializedName = $this->namingStrategy->translate($property);
 
 				return PropertyMappingException::rethrow(

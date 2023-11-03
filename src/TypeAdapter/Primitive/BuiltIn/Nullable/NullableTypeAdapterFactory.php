@@ -7,12 +7,14 @@ use GoodPhp\Reflection\Type\Special\NullableType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
-use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
 
+/**
+ * @implements TypeAdapterFactory<NullableTypeAdapter<mixed>>
+ */
 class NullableTypeAdapterFactory implements TypeAdapterFactory
 {
-	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?TypeAdapter
+	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?NullableTypeAdapter
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NullableType) {
 			return null;
