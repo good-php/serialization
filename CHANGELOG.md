@@ -1,3 +1,10 @@
+# [1.0.0-alpha.2](https://github.com/good-php/serialization/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2024-01-15)
+
+
+### Bug Fixes
+
+* Update reflection ([#3](https://github.com/good-php/serialization/issues/3)) ([6964587](https://github.com/good-php/serialization/commit/6964587875149ba289211d248603b1ae917986c5))
+
 # 1.0.0-alpha.1 (2023-11-03)
 
 
