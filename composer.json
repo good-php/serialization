@@ -11,7 +11,7 @@
 	"require": {
 		"php": ">=8.2",
 		"php-ds/php-ds": "^1.3.0",
-		"good-php/reflection": "v1.0.0-alpha.3",
+		"good-php/reflection": "v1.0.0-alpha.4",
 		"tenantcloud/php-standard": "^2.0"
 	},
 	"require-dev": {
