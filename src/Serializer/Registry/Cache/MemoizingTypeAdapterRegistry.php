@@ -14,7 +14,7 @@ use WeakMap;
 
 final class MemoizingTypeAdapterRegistry implements TypeAdapterRegistry
 {
-	/** @var array<class-string, array<string, WeakMap<object, array<int, array{ object[], TypeAdapter<mixed, mixed> }>>>> */
+	/** @var array<class-string, array<string, WeakMap<object, array<int, array{ Attributes, TypeAdapter<mixed, mixed> }>>>> */
 	private array $resolved = [];
 
 	public function __construct(
@@ -35,7 +35,7 @@ final class MemoizingTypeAdapterRegistry implements TypeAdapterRegistry
 
 		$matchingFactories = $this->resolved[$typeAdapterType][(string) $type][$skipPast ?? $serializer] ??= [];
 
-		/** @var array{ object[], TypeAdapter<mixed, mixed> }|null $attributesFactoryPair */
+		/** @var array{ Attributes, TypeAdapter<mixed, mixed> }|null $attributesFactoryPair */
 		$attributesFactoryPair = Arr::first($matchingFactories, fn (array $pair) => $attributes->allEqual($pair[0]));
 
 		if ($attributesFactoryPair) {
