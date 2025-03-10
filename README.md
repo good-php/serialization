@@ -364,6 +364,19 @@ readonly class Card {
 }
 ```
 
+Whenever that happens, a default value will be used instead. Optionally, you can also log such cases:
+
+```php
+$serializer = (new SerializerBuilder())
+	->reportUnexpectedDefault(function (BoundClassProperty $property, UnexpectedValueException $e) {
+		$log->warning("Serializer used a default for unexpected value: {$e->getMessage()}", [
+			'property' => $property->serializedName(),
+			'exception' => $e,
+		]);
+	})
+	->build();
+```
+
 ## Error handling
 
 This is expected to be used with client-provided data, so good error descriptions is a must.
