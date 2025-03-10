@@ -10,6 +10,7 @@ use GoodPhp\Reflection\Type\Special\NullableType;
 use GoodPhp\Reflection\Type\Type;
 use GoodPhp\Serialization\MissingValue;
 use GoodPhp\Serialization\Serializer;
+use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedValueException;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\Flattening\Flatten;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\Flattening\FlatteningBoundClassProperty;
 use Webmozart\Assert\Assert;
@@ -18,8 +19,12 @@ class DefaultBoundClassPropertyFactory implements BoundClassPropertyFactory
 {
 	private readonly NamedType $missingValueType;
 
-	public function __construct()
-	{
+	/**
+	 * @param callable(BoundClassProperty<object>, UnexpectedValueException): void|null $reportUnexpectedDefault
+	 */
+	public function __construct(
+		private readonly mixed $reportUnexpectedDefault = null,
+	) {
 		$this->missingValueType = new NamedType(MissingValue::class);
 	}
 
@@ -49,6 +54,7 @@ class DefaultBoundClassPropertyFactory implements BoundClassPropertyFactory
 			hasDefaultValue: $this->hasDefaultValue($property),
 			nullable: $type instanceof NullableType,
 			useDefaultForUnexpected: $property->attributes()->has(UseDefaultForUnexpected::class),
+			reportUnexpectedDefault: $this->reportUnexpectedDefault,
 		);
 	}
 
