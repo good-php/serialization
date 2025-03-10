@@ -9,6 +9,7 @@ use GoodPhp\Serialization\Hydration\Hydrator;
 use GoodPhp\Serialization\Serializer\Registry\Cache\MemoizingTypeAdapterRegistry;
 use GoodPhp\Serialization\Serializer\Registry\Factory\FactoryTypeAdapterRegistryBuilder;
 use GoodPhp\Serialization\Serializer\TypeAdapterRegistrySerializer;
+use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedValueException;
 use GoodPhp\Serialization\TypeAdapter\Json\FromPrimitiveJsonTypeAdapterFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\ArrayMapper;
 use GoodPhp\Serialization\TypeAdapter\Primitive\BuiltIn\BackedEnumMapper;
@@ -19,6 +20,7 @@ use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\ClassPropertiesP
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\BuiltInNamingStrategy;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\NamingStrategy;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Naming\SerializedNameAttributeNamingStrategy;
+use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\BoundClassProperty;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\BoundClassPropertyFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\DefaultBoundClassPropertyFactory;
 use GoodPhp\Serialization\TypeAdapter\Primitive\Illuminate\CollectionMapper;
@@ -43,6 +45,9 @@ final class SerializerBuilder
 	private ?BoundClassPropertyFactory $boundClassPropertyFactory = null;
 
 	private ?MapperMethodFactory $mapperMethodFactory = null;
+
+	/** @var callable(BoundClassProperty<object>, UnexpectedValueException): void|null */
+	private mixed $reportUnexpectedDefault = null;
 
 	public function withReflector(Reflector $reflector): self
 	{
@@ -126,6 +131,19 @@ final class SerializerBuilder
 		return $that;
 	}
 
+	/**
+	 * Define a callback for cases where a default value is substituted when using #[UseDefaultForUnexpected]
+	 *
+	 * @param callable(BoundClassProperty<object>, UnexpectedValueException): void|null $callback
+	 */
+	public function reportUnexpectedDefault(?callable $callback): self
+	{
+		$that = clone $this;
+		$that->reportUnexpectedDefault = $callback;
+
+		return $that;
+	}
+
 	public function build(): Serializer
 	{
 		$typeAdapterRegistryBuilder = $this->typeAdapterRegistryBuilder()
@@ -139,7 +157,9 @@ final class SerializerBuilder
 			->addFactoryLast(new ClassPropertiesPrimitiveTypeAdapterFactory(
 				new SerializedNameAttributeNamingStrategy($this->namingStrategy ?? BuiltInNamingStrategy::PRESERVING),
 				$this->hydrator ?? new ConstructorHydrator(),
-				$this->boundClassPropertyFactory ?? new DefaultBoundClassPropertyFactory(),
+				$this->boundClassPropertyFactory ?? new DefaultBoundClassPropertyFactory(
+					$this->reportUnexpectedDefault,
+				),
 			))
 			->addFactoryLast(new FromPrimitiveJsonTypeAdapterFactory());
 

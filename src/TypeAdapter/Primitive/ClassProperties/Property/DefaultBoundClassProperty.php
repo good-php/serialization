@@ -26,8 +26,9 @@ use Webmozart\Assert\Assert;
 final class DefaultBoundClassProperty implements BoundClassProperty
 {
 	/**
-	 * @param PropertyReflection<T, HasProperties<T>> $property
-	 * @param TypeAdapter<mixed, mixed>               $typeAdapter
+	 * @param PropertyReflection<T, HasProperties<T>>                                   $property
+	 * @param TypeAdapter<mixed, mixed>                                                 $typeAdapter
+	 * @param callable(BoundClassProperty<object>, UnexpectedValueException): void|null $reportUnexpectedDefault
 	 */
 	public function __construct(
 		private readonly PropertyReflection $property,
@@ -37,6 +38,7 @@ final class DefaultBoundClassProperty implements BoundClassProperty
 		private readonly bool $hasDefaultValue,
 		private readonly bool $nullable,
 		private readonly bool $useDefaultForUnexpected,
+		private readonly mixed $reportUnexpectedDefault = null,
 	) {
 		if ($this->useDefaultForUnexpected) {
 			Assert::true($this->hasDefaultValue, 'When using #[UseDefaultForUnexpected], the property must have a default value.');
@@ -92,6 +94,10 @@ final class DefaultBoundClassProperty implements BoundClassProperty
 			];
 		} catch (UnexpectedValueException $e) {
 			if ($this->useDefaultForUnexpected) {
+				if ($this->reportUnexpectedDefault !== null) {
+					($this->reportUnexpectedDefault)($this, $e);
+				}
+
 				return [];
 			}
 

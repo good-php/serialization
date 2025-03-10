@@ -50,6 +50,7 @@ final class FactoryTypeAdapterRegistry implements TypeAdapterRegistry
 			$factory = $this->factories[$i];
 
 			if ($adapter = $factory->create($typeAdapterType, $type, $attributes, $serializer)) {
+				/* @phpstan-ignore-next-line */
 				Assert::isInstanceOf($adapter, $typeAdapterType);
 
 				/** @var TypeAdapterType */

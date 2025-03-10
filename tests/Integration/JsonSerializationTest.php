@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
 use Tests\Stubs\BackedEnumStub;
 use Tests\Stubs\ClassStub;
 use Tests\Stubs\NestedStub;
+use Tests\Stubs\UseDefaultStub;
 use Tests\Stubs\ValueEnumStub;
 use Throwable;
 
@@ -334,6 +335,18 @@ class JsonSerializationTest extends TestCase
 				new CarbonImmutable('2020-01-01 00:00:00')
 			),
 			'{"primitive":1,"nested":{},"date":"2020-01-01T00:00:00.000000Z","carbonImmutable":"2020-01-01T00:00:00.000000Z"}',
+		];
+
+		yield '#[UseDefaultForUnexpected] with unexpected values' => [
+			new NamedType(UseDefaultStub::class),
+			new UseDefaultStub(),
+			'{"null":"unknown value","enum":"also unknown"}',
+		];
+
+		yield '#[UseDefaultForUnexpected] with expected values' => [
+			new NamedType(UseDefaultStub::class),
+			new UseDefaultStub(BackedEnumStub::ONE, BackedEnumStub::TWO),
+			'{"null":"one","enum":"two"}',
 		];
 	}
 
