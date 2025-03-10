@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/good-php/serialization/compare/v1.0.0...v1.1.0) (2025-03-10)
+
+
+### Features
+
+* A callback for reporting unexpected enum values ([#7](https://github.com/good-php/serialization/issues/7)) ([99913dd](https://github.com/good-php/serialization/commit/99913dd04cadce0c7471f16cbaf60099f5159272))
+
 # 1.0.0 (2024-05-14)
 
 
