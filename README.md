@@ -70,6 +70,7 @@ test suite: [tests/Integration](tests/Integration).
 
 There are some alternatives to this, but they usually lack one of the following:
 
+- stupid simple internal structure: no node tree, no value/JSON wrappers, no in-repo custom reflection implementation, no PHP parsing
 - doesn't rely on inheritance of serializable classes, hence allows serializing third-party classes
 - parses existing PHPDoc information instead of duplicating it through attributes
 - supports generic types which are quite useful for wrapper types
@@ -77,4 +78,3 @@ There are some alternatives to this, but they usually lack one of the following:
 - produces developer-friendly error messages for invalid data
 - correctly handles optional (missing keys) and `null` values as separate concerns
 - simple to extend with additional formats
-- simple internal structure: no node tree, no value/JSON wrappers, no custom reflection / PHP parsing, no inherent limitations
