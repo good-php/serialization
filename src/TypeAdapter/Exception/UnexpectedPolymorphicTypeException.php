@@ -8,11 +8,11 @@ use Throwable;
 class UnexpectedPolymorphicTypeException extends RuntimeException implements UnexpectedValueException
 {
 	/**
-	 * @param list<int|string> $expectedTypeNames
+	 * @param list<string> $expectedTypeNames
 	 */
 	public function __construct(
 		public readonly string $typeNameField,
-		public readonly string|int $value,
+		public readonly string $value,
 		public readonly array $expectedTypeNames,
 		Throwable $previous = null
 	) {
