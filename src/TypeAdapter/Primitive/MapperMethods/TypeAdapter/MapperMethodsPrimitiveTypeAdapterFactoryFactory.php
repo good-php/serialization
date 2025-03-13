@@ -25,22 +25,26 @@ final class MapperMethodsPrimitiveTypeAdapterFactoryFactory
 		Assert::isInstanceOf($reflection, ClassReflection::class);
 
 		return new MapperMethodsPrimitiveTypeAdapterFactory(
-			$reflection->methods()
+			collect($reflection->methods())
 				->filter(fn (MethodReflection $method) => $method->attributes()->has(MapTo::class))
+				->values()
 				->map(fn (MethodReflection $method) => $this->mapperMethodFactory->createTo(
 					$adapter,
 					$method,
 					/* @phpstan-ignore-next-line argument.type */
 					$method->attributes()->sole(MapTo::class),
-				)),
-			$reflection->methods()
+				))
+				->all(),
+			collect($reflection->methods())
 				->filter(fn (MethodReflection $method) => $method->attributes()->has(MapFrom::class))
+				->values()
 				->map(fn (MethodReflection $method) => $this->mapperMethodFactory->createFrom(
 					$adapter,
 					$method,
 					/* @phpstan-ignore-next-line argument.type */
 					$method->attributes()->sole(MapFrom::class)
-				)),
+				))
+				->all(),
 		);
 	}
 }

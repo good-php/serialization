@@ -10,5 +10,4 @@ parameters:
 		- src
 
 	ignoreErrors:
-		# There's no extension for that :(
-#		- '#Call to an undefined method Pest\\Expectations\\Expectation|Pest\\Expectations\\Support\\Extendable::#i'
+		- '#Parameter (\#|\$).* expects list<(.*)>, array<int, \2> given.#i'

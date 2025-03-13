@@ -38,7 +38,7 @@ final class InstanceMapperMethod implements MapperMethod
 
 	public function invoke(mixed $value, Type $type, Attributes $attributes, Serializer $serializer, MapperMethodsPrimitiveTypeAdapterFactory $skipPast): mixed
 	{
-		$map = [
+		$injectables = [
 			MapperMethodsPrimitiveTypeAdapterFactory::class => $skipPast,
 			Serializer::class                               => $serializer,
 			Type::class                                     => $type,
@@ -50,17 +50,7 @@ final class InstanceMapperMethod implements MapperMethod
 			return $this->method->invoke(
 				$this->adapter,
 				$value,
-				...$this->method
-					->parameters()
-					->slice(1)
-					->map(function (FunctionParameterReflection $parameter) use ($map) {
-						$type = $parameter->type();
-
-						Assert::isInstanceOf($type, NamedType::class);
-						Assert::keyExists($map, $type->name);
-
-						return $map[$type->name];
-					})
+				...$this->invokeParameters($injectables),
 			);
 		} catch (TypeError $e) {
 			if (!str_contains($e->getMessage(), 'Argument #1')) {
@@ -70,5 +60,24 @@ final class InstanceMapperMethod implements MapperMethod
 			/* @phpstan-ignore-next-line argument.type */
 			throw new UnexpectedTypeException($value, $this->method->parameters()->firstOrFail()->type());
 		}
+	}
+
+	/**
+	 * @param array<class-string, mixed> $injectables
+	 *
+	 * @return list<mixed>
+	 */
+	private function invokeParameters(array $injectables): array
+	{
+		$parameters = array_slice($this->method->parameters(), 1);
+
+		return array_map(function (FunctionParameterReflection $parameter) use ($injectables) {
+			$type = $parameter->type();
+
+			Assert::isInstanceOf($type, NamedType::class);
+			Assert::keyExists($injectables, $type->name);
+
+			return $injectables[$type->name];
+		}, $parameters);
 	}
 }
