@@ -10,8 +10,9 @@
 	],
 	"require": {
 		"php": ">=8.2",
+		"php-ds/php-ds": "^1.3.0",
 		"good-php/reflection": "^1.0",
-		"illuminate/support": "^10.0 || ^11.0"
+		"tenantcloud/php-standard": "^2.0"
 	},
 	"require-dev": {
 		"pestphp/pest": "^2.8",
@@ -21,8 +22,7 @@
 		"phpstan/phpstan-phpunit": "^1.3",
 		"phpstan/phpstan-webmozart-assert": "^1.2",
 		"phpstan/phpstan-mockery": "^1.1",
-		"phake/phake": "^4.2",
-		"tenantcloud/php-standard": "^2.2"
+		"phake/phake": "^4.2"
 	},
 	"autoload": {
 		"psr-4": {

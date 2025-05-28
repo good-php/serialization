@@ -33,7 +33,7 @@ class FlatteningBoundClassProperty implements BoundClassProperty
 	{
 		$value = $this->property->get($object);
 
-		Assert::notNull($value, 'Value for #[Flatten] property cannot be null. This should have been handled by NullableTypeAdapter.');
+		Assert::notNull($value, 'Value for #[Flatten] property cannot be null.');
 
 		$serialized = $this->typeAdapter->serialize($value);
 
