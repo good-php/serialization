@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/good-php/serialization/compare/v1.1.1...v1.2.0) (2025-05-28)
+
+
+### Features
+
+* Polymorphic adapter ([#10](https://github.com/good-php/serialization/issues/10)) ([145e802](https://github.com/good-php/serialization/commit/145e802ac60f171e722e96a649af6eb1c90aca3d))
+
 ## [1.1.1](https://github.com/good-php/serialization/compare/v1.1.0...v1.1.1) (2025-05-28)
 
 
