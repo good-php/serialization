@@ -30,7 +30,6 @@ use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\TypeAdapter\Mapper
 use GoodPhp\Serialization\TypeAdapter\Primitive\PhpStandard\ValueEnumMapper;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
-use TenantCloud\Standard\Enum\ValueEnum;
 use Webmozart\Assert\Assert;
 
 final class SerializerBuilder
@@ -150,13 +149,8 @@ final class SerializerBuilder
 		$typeAdapterRegistryBuilder = $this->typeAdapterRegistryBuilder()
 			->addFactoryLast(new NullableTypeAdapterFactory())
 			->addMapperLast(new ScalarMapper())
-			->addMapperLast(new BackedEnumMapper());
-
-		if (class_exists(ValueEnum::class)) {
-			$typeAdapterRegistryBuilder = $typeAdapterRegistryBuilder->addMapperLast(new ValueEnumMapper());
-		}
-
-		$typeAdapterRegistryBuilder = $typeAdapterRegistryBuilder
+			->addMapperLast(new BackedEnumMapper())
+			->addMapperLast(new ValueEnumMapper())
 			->addMapperLast(new ArrayMapper())
 			->addMapperLast(new CollectionMapper())
 			->addMapperLast(new DateTimeMapper())
