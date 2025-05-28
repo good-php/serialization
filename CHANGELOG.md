@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/good-php/serialization/compare/v1.1.0...v1.1.1) (2025-05-28)
+
+
+### Reverts
+
+* Revert "Merge pull request #8 from good-php/polymorphic-adapter" (#9) ([aae982b](https://github.com/good-php/serialization/commit/aae982b9f0fb0ec599f7a5acdf3ad53b336f615d)), closes [#8](https://github.com/good-php/serialization/issues/8) [#9](https://github.com/good-php/serialization/issues/9)
+
 # [1.1.0](https://github.com/good-php/serialization/compare/v1.0.0...v1.1.0) (2025-03-10)
 
 
