@@ -3,6 +3,7 @@
 namespace Tests\Integration;
 
 use Carbon\CarbonImmutable;
+use DateMalformedStringException;
 use DateTime;
 use Exception;
 use GoodPhp\Reflection\Type\Combinatorial\UnionType;
@@ -149,13 +150,10 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'Collection of DateTime' => [
-			new NamedType(
-				Collection::class,
-				new Collection([
-					PrimitiveType::integer(),
-					new NamedType(DateTime::class),
-				])
-			),
+			new NamedType(Collection::class, [
+				PrimitiveType::integer(),
+				new NamedType(DateTime::class),
+			]),
 			new Collection([new DateTime('2020-01-01 00:00:00')]),
 			<<<'JSON'
 				[
@@ -165,12 +163,9 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'ClassStub with all fields' => [
-			new NamedType(
-				ClassStub::class,
-				new Collection([
-					new NamedType(DateTime::class),
-				])
-			),
+			new NamedType(ClassStub::class, [
+				new NamedType(DateTime::class),
+			]),
 			new ClassStub(
 				1,
 				new NestedStub(),
@@ -216,11 +211,9 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'ClassStub with empty optional and null nullable' => [
-			new NamedType(
-				ClassStub::class,
-				new Collection([
+			new NamedType(ClassStub::class, [
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			new ClassStub(
 				1,
@@ -370,12 +363,10 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'Collection of DateTime' => [
-			new NamedType(
-				Collection::class,
-				new Collection([
+			new NamedType(Collection::class, [
 					PrimitiveType::integer(),
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			new Collection([new DateTime('2020-01-01 00:00:00')]),
 			<<<'JSON'
@@ -386,11 +377,9 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'ClassStub with all fields' => [
-			new NamedType(
-				ClassStub::class,
-				new Collection([
+			new NamedType(ClassStub::class, [
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			new ClassStub(
 				1,
@@ -437,11 +426,9 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'ClassStub with empty optional and null nullable' => [
-			new NamedType(
-				ClassStub::class,
-				new Collection([
+			new NamedType(ClassStub::class, [
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			new ClassStub(
 				1,
@@ -468,12 +455,9 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'ClassStub with the least default fields' => [
-			new NamedType(
-				ClassStub::class,
-				new Collection([
+			new NamedType(ClassStub::class, [
 					new NamedType(DateTime::class),
-				])
-			),
+				]),
 			new ClassStub(
 				1,
 				new NestedStub(),
@@ -584,7 +568,7 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'DateTime' => [
-			new Exception('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database'),
+			new DateMalformedStringException('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database'),
 			DateTime::class,
 			<<<'JSON'
 				"2020 dasd"
@@ -592,7 +576,7 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'backed enum type' => [
-			new UnexpectedTypeException(true, new UnionType(new Collection([PrimitiveType::string(), PrimitiveType::integer()]))),
+			new UnexpectedTypeException(true, new UnionType([PrimitiveType::string(), PrimitiveType::integer()])),
 			BackedEnumStub::class,
 			<<<'JSON'
 				true
@@ -608,7 +592,7 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'value enum type' => [
-			new UnexpectedTypeException(true, new UnionType(new Collection([PrimitiveType::string(), PrimitiveType::integer()]))),
+			new UnexpectedTypeException(true, new UnionType([PrimitiveType::string(), PrimitiveType::integer()])),
 			ValueEnumStub::class,
 			<<<'JSON'
 				true
@@ -624,7 +608,7 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'array of DateTime #1' => [
-			new CollectionItemMappingException(0, new Exception('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database')),
+			new CollectionItemMappingException(0, new DateMalformedStringException('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database')),
 			PrimitiveType::array(
 				new NamedType(DateTime::class)
 			),
@@ -658,12 +642,10 @@ class JsonSerializationTest extends TestCase
 
 		yield 'Collection of DateTime #1' => [
 			new CollectionItemMappingException(0, new UnexpectedTypeException(null, PrimitiveType::string())),
-			new NamedType(
-				Collection::class,
-				new Collection([
+			new NamedType(Collection::class, [
 					PrimitiveType::integer(),
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			<<<'JSON'
 				[null]
@@ -675,12 +657,10 @@ class JsonSerializationTest extends TestCase
 				new CollectionItemMappingException(0, new UnexpectedTypeException(null, PrimitiveType::string())),
 				new CollectionItemMappingException(1, new UnexpectedTypeException(null, PrimitiveType::string())),
 			]),
-			new NamedType(
-				Collection::class,
-				new Collection([
+			new NamedType(Collection::class, [
 					PrimitiveType::integer(),
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			<<<'JSON'
 				[null, null]
@@ -689,11 +669,9 @@ class JsonSerializationTest extends TestCase
 
 		yield 'ClassStub with wrong primitive type' => [
 			new PropertyMappingException('primitive', new UnexpectedTypeException('1', PrimitiveType::integer())),
-			new NamedType(
-				ClassStub::class,
-				new Collection([
+			new NamedType(ClassStub::class, [
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			<<<'JSON'
 				{
@@ -709,11 +687,9 @@ class JsonSerializationTest extends TestCase
 
 		yield 'ClassStub with wrong nested field type' => [
 			new PropertyMappingException('nested.Field', new UnexpectedTypeException(123, PrimitiveType::string())),
-			new NamedType(
-				ClassStub::class,
-				new Collection([
+			new NamedType(ClassStub::class, [
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			<<<'JSON'
 				{

@@ -58,7 +58,7 @@ final class InstanceMapperMethod implements MapperMethod
 			}
 
 			/* @phpstan-ignore-next-line argument.type */
-			throw new UnexpectedTypeException($value, $this->method->parameters()->firstOrFail()->type());
+			throw new UnexpectedTypeException($value, $this->method->parameters()[0]->type());
 		}
 	}
 
