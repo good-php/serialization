@@ -21,7 +21,7 @@ class ClassStub
 		public NestedStub $nested,
 		#[SerializedName('date')]
 		public mixed $generic,
-		public int|null|MissingValue $optional,
+		public int|MissingValue|null $optional,
 		public ?int $nullable,
 		public int|MissingValue $nonNullOptional,
 		#[Flatten]

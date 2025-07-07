@@ -30,7 +30,7 @@ final class FactoryTypeAdapterRegistry implements TypeAdapterRegistry
 	 *
 	 * @return TypeAdapterType
 	 */
-	public function forType(string $typeAdapterType, Serializer $serializer, Type $type, Attributes $attributes = new ArrayAttributes(), TypeAdapterFactory $skipPast = null): TypeAdapter
+	public function forType(string $typeAdapterType, Serializer $serializer, Type $type, Attributes $attributes = new ArrayAttributes(), ?TypeAdapterFactory $skipPast = null): TypeAdapter
 	{
 		if ($skipPast) {
 			$skipPastIndex = array_search($skipPast, $this->factories, true);

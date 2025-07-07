@@ -9,6 +9,4 @@ use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
  *
  * @extends TypeAdapter<T, string>
  */
-interface JsonTypeAdapter extends TypeAdapter
-{
-}
+interface JsonTypeAdapter extends TypeAdapter {}

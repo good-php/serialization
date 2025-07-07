@@ -9,6 +9,4 @@ use GoodPhp\Serialization\TypeAdapter\TypeAdapter;
  *
  * @extends TypeAdapter<T, mixed>
  */
-interface PrimitiveTypeAdapter extends TypeAdapter
-{
-}
+interface PrimitiveTypeAdapter extends TypeAdapter {}

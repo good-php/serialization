@@ -18,10 +18,10 @@ final class ArrayMapper
 	/**
 	 * @template T
 	 *
-	 * @param array<T>  $value
+	 * @param list<T>   $value
 	 * @param NamedType $type
 	 *
-	 * @return array<mixed>
+	 * @return list<mixed>
 	 */
 	#[MapTo(PrimitiveTypeAdapter::class)]
 	public function to(array $value, Type $type, Serializer $serializer): array|stdClass
@@ -49,10 +49,10 @@ final class ArrayMapper
 	}
 
 	/**
-	 * @param array<mixed> $value
-	 * @param NamedType    $type
+	 * @param list<mixed> $value
+	 * @param NamedType   $type
 	 *
-	 * @return array<mixed>
+	 * @return list<mixed>
 	 */
 	#[MapFrom(PrimitiveTypeAdapter::class)]
 	public function from(array $value, Type $type, Serializer $serializer): array

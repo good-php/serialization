@@ -21,8 +21,8 @@ use Webmozart\Assert\Assert;
 final class InstanceMapperMethod implements MapperMethod
 {
 	/**
-	 * @param AdapterType                                            $adapter
 	 * @param MethodReflection<AdapterType, HasMethods<AdapterType>> $method
+	 * @param AdapterType                                            $adapter
 	 */
 	public function __construct(
 		private readonly MethodReflection $method,

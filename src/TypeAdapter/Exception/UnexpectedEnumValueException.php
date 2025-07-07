@@ -13,7 +13,7 @@ class UnexpectedEnumValueException extends RuntimeException implements Unexpecte
 	public function __construct(
 		public readonly string|int $value,
 		public readonly array $expectedValues,
-		Throwable $previous = null
+		?Throwable $previous = null
 	) {
 		parent::__construct(
 			'Expected one of [' .

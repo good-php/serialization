@@ -7,7 +7,7 @@ use Throwable;
 
 class MissingValueException extends RuntimeException
 {
-	public function __construct(Throwable $previous = null)
+	public function __construct(?Throwable $previous = null)
 	{
 		parent::__construct('Missing value.', 0, $previous);
 	}

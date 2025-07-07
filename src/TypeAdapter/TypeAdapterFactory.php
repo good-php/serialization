@@ -14,8 +14,6 @@ interface TypeAdapterFactory
 {
 	/**
 	 * @param class-string<TypeAdapter<mixed, mixed>> $typeAdapterType
-	 *
-	 * @return T|null
 	 */
 	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?TypeAdapter;
 }

@@ -14,7 +14,7 @@ class UnexpectedPolymorphicTypeException extends RuntimeException implements Une
 		public readonly string $typeNameField,
 		public readonly string $value,
 		public readonly array $expectedTypeNames,
-		Throwable $previous = null
+		?Throwable $previous = null
 	) {
 		parent::__construct(
 			"Only the following polymorphic types for field '{$this->typeNameField}' are allowed: [" .

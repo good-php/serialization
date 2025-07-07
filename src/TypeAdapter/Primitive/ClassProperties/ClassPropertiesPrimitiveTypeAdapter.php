@@ -19,7 +19,7 @@ use Illuminate\Support\Arr;
 final class ClassPropertiesPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 {
 	/**
-	 * @param class-string<T>                        $className
+	 * @param class-string<T>             $className
 	 * @param list<BoundClassProperty<T>> $properties
 	 */
 	public function __construct(

@@ -19,7 +19,7 @@ final class TypeAdapterRegistrySerializer implements Serializer
 		private readonly Reflector $reflector,
 	) {}
 
-	public function adapter(string $typeAdapterType, Type|string $type, Attributes $attributes = new ArrayAttributes(), TypeAdapterFactory $skipPast = null): TypeAdapter
+	public function adapter(string $typeAdapterType, Type|string $type, Attributes $attributes = new ArrayAttributes(), ?TypeAdapterFactory $skipPast = null): TypeAdapter
 	{
 		if (is_string($type)) {
 			$type = new NamedType($type);
