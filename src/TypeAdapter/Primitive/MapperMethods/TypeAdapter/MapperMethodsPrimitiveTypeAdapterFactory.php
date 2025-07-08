@@ -26,6 +26,9 @@ final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFacto
 		Assert::true($this->toMappers || $this->fromMappers);
 	}
 
+	/**
+	 * @return MapperMethodsPrimitiveTypeAdapter<mixed>|null
+	 */
 	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?MapperMethodsPrimitiveTypeAdapter
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NamedType) {

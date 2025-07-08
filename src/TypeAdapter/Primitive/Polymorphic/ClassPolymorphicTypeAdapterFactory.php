@@ -35,6 +35,9 @@ class ClassPolymorphicTypeAdapterFactory implements TypeAdapterFactory
 		return new ClassPolymorphicTypeAdapterFactoryBuilder($parentClassName, $serializedTypeNameField);
 	}
 
+	/**
+	 * @return PolymorphicTypeAdapter<object>|null
+	 */
 	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?PolymorphicTypeAdapter
 	{
 		if (

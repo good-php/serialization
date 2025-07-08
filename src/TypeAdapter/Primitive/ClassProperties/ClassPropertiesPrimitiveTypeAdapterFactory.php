@@ -25,6 +25,9 @@ final class ClassPropertiesPrimitiveTypeAdapterFactory implements TypeAdapterFac
 		private readonly BoundClassPropertyFactory $boundClassPropertyFactory,
 	) {}
 
+	/**
+	 * @return ClassPropertiesPrimitiveTypeAdapter<object>|null
+	 */
 	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?ClassPropertiesPrimitiveTypeAdapter
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NamedType) {

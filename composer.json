@@ -10,7 +10,7 @@
 	],
 	"require": {
 		"php": ">=8.2",
-		"good-php/reflection": "dev-update-deps",
+		"good-php/reflection": "^2.0",
 		"illuminate/support": "^10.0 || ^11.0 || ^12.0"
 	},
 	"require-dev": {
