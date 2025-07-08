@@ -574,8 +574,8 @@ class JsonSerializationTest extends TestCase
 				new DateMalformedStringException('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database'),
 				DateTime::class,
 				<<<'JSON'
-				"2020 dasd"
-				JSON,
+					"2020 dasd"
+					JSON,
 			];
 		}
 
@@ -618,8 +618,8 @@ class JsonSerializationTest extends TestCase
 					new NamedType(DateTime::class)
 				),
 				<<<'JSON'
-				["2020 dasd"]
-				JSON,
+					["2020 dasd"]
+					JSON,
 			];
 		}
 
