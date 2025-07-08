@@ -569,13 +569,15 @@ class JsonSerializationTest extends TestCase
 				JSON,
 		];
 
-		yield 'DateTime' => [
-			new DateMalformedStringException('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database'),
-			DateTime::class,
-			<<<'JSON'
+		if (version_compare(PHP_VERSION, '8.3', '>=')) {
+			yield 'DateTime' => [
+				new DateMalformedStringException('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database'),
+				DateTime::class,
+				<<<'JSON'
 				"2020 dasd"
 				JSON,
-		];
+			];
+		}
 
 		yield 'backed enum type' => [
 			new UnexpectedTypeException(true, new UnionType([PrimitiveType::string(), PrimitiveType::integer()])),
@@ -609,15 +611,17 @@ class JsonSerializationTest extends TestCase
 				JSON,
 		];
 
-		yield 'array of DateTime #1' => [
-			new CollectionItemMappingException(0, new DateMalformedStringException('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database')),
-			PrimitiveType::array(
-				new NamedType(DateTime::class)
-			),
-			<<<'JSON'
+		if (version_compare(PHP_VERSION, '8.3', '>=')) {
+			yield 'array of DateTime #1' => [
+				new CollectionItemMappingException(0, new DateMalformedStringException('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database')),
+				PrimitiveType::array(
+					new NamedType(DateTime::class)
+				),
+				<<<'JSON'
 				["2020 dasd"]
 				JSON,
-		];
+			];
+		}
 
 		yield 'array of DateTime #2' => [
 			new CollectionItemMappingException(1, new UnexpectedTypeException(null, PrimitiveType::string())),
