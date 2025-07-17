@@ -1,3 +1,34 @@
+# [2.0.0](https://github.com/good-php/serialization/compare/v1.2.0...v2.0.0) (2025-07-17)
+
+
+### chore
+
+* Reflection 2x ([#11](https://github.com/good-php/serialization/issues/11)) ([1bc6f27](https://github.com/good-php/serialization/commit/1bc6f278b7f2a38b8409f9e1e80ebec9a8a2f8f3))
+
+
+### BREAKING CHANGES
+
+* updated Reflection to 2.x, which breaks some interactions with it
+
+* docs: Separate docs
+
+* feat: Polymorphic type adapter and less required dependencies
+
+* fix: Don't allow int in UnexpectedPolymorphicTypeException
+
+* refactor: Upgrade to reflection 2.x
+
+* fix: Failing tests
+
+* refactor: Code style
+
+* fix: Failing PHPStan
+
+* fix: Failing tests
+
+* refactor: Code style
+* updated Reflection to 2.x, which breaks some interactions with it
+
 # [1.2.0](https://github.com/good-php/serialization/compare/v1.1.1...v1.2.0) (2025-05-28)
 
 
