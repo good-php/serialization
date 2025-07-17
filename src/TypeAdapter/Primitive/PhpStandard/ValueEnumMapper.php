@@ -39,6 +39,7 @@ final class ValueEnumMapper
 	#[MapFrom(PrimitiveTypeAdapter::class, new BaseTypeAcceptedByAcceptanceStrategy(ValueEnum::class))]
 	public function from(string|int $value, Type $type): ValueEnum
 	{
+		/** @var class-string<ValueEnum<string|int>> $enumClass */
 		$enumClass = $type->name;
 
 		try {

@@ -2,6 +2,4 @@
 
 namespace Tests\Stubs\Polymorphic;
 
-interface Change
-{
-}
+interface Change {}

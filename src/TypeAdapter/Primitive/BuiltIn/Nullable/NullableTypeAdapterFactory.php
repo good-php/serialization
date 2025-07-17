@@ -14,6 +14,9 @@ use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
  */
 class NullableTypeAdapterFactory implements TypeAdapterFactory
 {
+	/**
+	 * @return NullableTypeAdapter<mixed>|null
+	 */
 	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?NullableTypeAdapter
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NullableType) {

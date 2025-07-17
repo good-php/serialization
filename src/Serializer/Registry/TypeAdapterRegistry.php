@@ -19,5 +19,5 @@ interface TypeAdapterRegistry
 	 *
 	 * @return TypeAdapterType
 	 */
-	public function forType(string $typeAdapterType, Serializer $serializer, Type $type, Attributes $attributes = new ArrayAttributes(), TypeAdapterFactory $skipPast = null): TypeAdapter;
+	public function forType(string $typeAdapterType, Serializer $serializer, Type $type, Attributes $attributes = new ArrayAttributes(), ?TypeAdapterFactory $skipPast = null): TypeAdapter;
 }

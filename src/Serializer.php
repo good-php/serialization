@@ -26,5 +26,5 @@ interface Serializer
 	 *
 	 * @return A
 	 */
-	public function adapter(string $typeAdapterType, Type|string $type, Attributes $attributes = new ArrayAttributes(), TypeAdapterFactory $skipPast = null): TypeAdapter;
+	public function adapter(string $typeAdapterType, Type|string $type, Attributes $attributes = new ArrayAttributes(), ?TypeAdapterFactory $skipPast = null): TypeAdapter;
 }

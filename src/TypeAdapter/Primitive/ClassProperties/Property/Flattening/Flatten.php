@@ -5,6 +5,4 @@ namespace GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\F
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Flatten
-{
-}
+class Flatten {}

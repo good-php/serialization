@@ -14,7 +14,7 @@ final class TypeAdapterNotFoundException extends RuntimeException
 	/**
 	 * @param TypeAdapterFactory<TypeAdapter<mixed, mixed>>|null $skipPast
 	 */
-	public function __construct(string $typeAdapterType, Type $type, Attributes $attributes, ?TypeAdapterFactory $skipPast, Throwable $previous = null)
+	public function __construct(string $typeAdapterType, Type $type, Attributes $attributes, ?TypeAdapterFactory $skipPast, ?Throwable $previous = null)
 	{
 		$message = "A matching type adapter of type '{$typeAdapterType}' for type '{$type}' " .
 			($attributes->has() ? 'with attributes ' . $attributes : '') .

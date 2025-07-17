@@ -25,6 +25,7 @@ final class BackedEnumMapper
 	#[MapFrom(PrimitiveTypeAdapter::class, new BaseTypeAcceptedByAcceptanceStrategy(BackedEnum::class))]
 	public function from(string|int $value, Type $type): BackedEnum
 	{
+		/** @var class-string<BackedEnum> $enumClass */
 		$enumClass = $type->name;
 		$enum = $enumClass::tryFrom($value);
 

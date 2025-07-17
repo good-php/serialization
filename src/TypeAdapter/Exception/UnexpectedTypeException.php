@@ -11,7 +11,7 @@ class UnexpectedTypeException extends RuntimeException
 	public function __construct(
 		public readonly mixed $value,
 		public readonly Type $expectedType,
-		Throwable $previous = null
+		?Throwable $previous = null
 	) {
 		parent::__construct(
 			"Expected value of type '{$expectedType}', but got '" .

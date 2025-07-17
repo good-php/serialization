@@ -25,6 +25,9 @@ final class ClassPropertiesPrimitiveTypeAdapterFactory implements TypeAdapterFac
 		private readonly BoundClassPropertyFactory $boundClassPropertyFactory,
 	) {}
 
+	/**
+	 * @return ClassPropertiesPrimitiveTypeAdapter<object>|null
+	 */
 	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?ClassPropertiesPrimitiveTypeAdapter
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NamedType) {
@@ -43,14 +46,14 @@ final class ClassPropertiesPrimitiveTypeAdapterFactory implements TypeAdapterFac
 		return new ClassPropertiesPrimitiveTypeAdapter(
 			$this->hydrator,
 			$className,
-			$reflection->properties()->map(function (PropertyReflection $property) use ($serializer, $typeAdapterType) {
+			array_map(function (PropertyReflection $property) use ($serializer, $typeAdapterType) {
 				$serializedName = $this->namingStrategy->translate($property);
 
 				return PropertyMappingException::rethrow(
 					$serializedName,
 					fn () => $this->boundClassPropertyFactory->create($typeAdapterType, $serializedName, $property, $serializer),
 				);
-			})
+			}, $reflection->properties())
 		);
 	}
 }

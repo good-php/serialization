@@ -15,6 +15,9 @@ use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
  */
 final class FromPrimitiveJsonTypeAdapterFactory implements TypeAdapterFactory
 {
+	/**
+	 * @return JsonTypeAdapter<mixed>|null
+	 */
 	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?JsonTypeAdapter
 	{
 		if ($typeAdapterType !== JsonTypeAdapter::class) {

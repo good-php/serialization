@@ -10,7 +10,6 @@ use GoodPhp\Serialization\TypeAdapter\Exception\UnexpectedTypeException;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\Property\BoundClassProperty;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 /**
  * @template T of object
@@ -20,13 +19,13 @@ use Illuminate\Support\Collection;
 final class ClassPropertiesPrimitiveTypeAdapter implements PrimitiveTypeAdapter
 {
 	/**
-	 * @param class-string<T>                        $className
-	 * @param Collection<int, BoundClassProperty<T>> $properties
+	 * @param class-string<T>             $className
+	 * @param list<BoundClassProperty<T>> $properties
 	 */
 	public function __construct(
 		private readonly Hydrator $hydrator,
 		private readonly string $className,
-		private readonly Collection $properties,
+		private readonly array $properties,
 	) {}
 
 	public function serialize(mixed $value): mixed

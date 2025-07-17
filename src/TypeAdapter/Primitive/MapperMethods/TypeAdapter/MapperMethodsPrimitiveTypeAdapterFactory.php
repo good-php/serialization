@@ -9,7 +9,7 @@ use GoodPhp\Serialization\Serializer;
 use GoodPhp\Serialization\TypeAdapter\Primitive\MapperMethods\MapperMethod\MapperMethod;
 use GoodPhp\Serialization\TypeAdapter\Primitive\PrimitiveTypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\TypeAdapterFactory;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Arr;
 use Webmozart\Assert\Assert;
 
 /**
@@ -18,14 +18,17 @@ use Webmozart\Assert\Assert;
 final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFactory
 {
 	public function __construct(
-		/** @var Collection<int, MapperMethod> */
-		private readonly Collection $toMappers,
-		/** @var Collection<int, MapperMethod> */
-		private readonly Collection $fromMappers,
+		/** @var list<MapperMethod> */
+		private readonly array $toMappers,
+		/** @var list<MapperMethod> */
+		private readonly array $fromMappers,
 	) {
-		Assert::true($this->toMappers->isNotEmpty() || $this->fromMappers->isNotEmpty());
+		Assert::true($this->toMappers || $this->fromMappers);
 	}
 
+	/**
+	 * @return MapperMethodsPrimitiveTypeAdapter<mixed>|null
+	 */
 	public function create(string $typeAdapterType, Type $type, Attributes $attributes, Serializer $serializer): ?MapperMethodsPrimitiveTypeAdapter
 	{
 		if ($typeAdapterType !== PrimitiveTypeAdapter::class || !$type instanceof NamedType) {
@@ -53,10 +56,10 @@ final class MapperMethodsPrimitiveTypeAdapterFactory implements TypeAdapterFacto
 	}
 
 	/**
-	 * @param Collection<int, MapperMethod> $mappers
+	 * @param list<MapperMethod> $mappers
 	 */
-	private function findMapper(Collection $mappers, NamedType $type, Attributes $attributes, Serializer $serializer): ?MapperMethod
+	private function findMapper(array $mappers, NamedType $type, Attributes $attributes, Serializer $serializer): ?MapperMethod
 	{
-		return $mappers->first(fn (MapperMethod $method) => $method->accepts($type, $attributes, $serializer));
+		return Arr::first($mappers, fn (MapperMethod $method) => $method->accepts($type, $attributes, $serializer));
 	}
 }

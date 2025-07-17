@@ -3,8 +3,8 @@
 namespace Tests\Integration;
 
 use Carbon\CarbonImmutable;
+use DateMalformedStringException;
 use DateTime;
-use Exception;
 use GoodPhp\Reflection\Type\Combinatorial\UnionType;
 use GoodPhp\Reflection\Type\NamedType;
 use GoodPhp\Reflection\Type\PrimitiveType;
@@ -23,6 +23,7 @@ use GoodPhp\Serialization\TypeAdapter\Json\JsonTypeAdapter;
 use GoodPhp\Serialization\TypeAdapter\Primitive\ClassProperties\PropertyMappingException;
 use GoodPhp\Serialization\TypeAdapter\Primitive\Polymorphic\ClassPolymorphicTypeAdapterFactory;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Tests\Stubs\BackedEnumStub;
 use Tests\Stubs\ClassStub;
@@ -36,9 +37,7 @@ use Throwable;
 
 class JsonSerializationTest extends TestCase
 {
-	/**
-	 * @dataProvider serializesProvider
-	 */
+	#[DataProvider('serializesProvider')]
 	public function testSerializes(string|Type $type, mixed $data, string $expectedSerialized): void
 	{
 		$adapter = $this->serializer()->adapter(JsonTypeAdapter::class, $type);
@@ -149,13 +148,10 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'Collection of DateTime' => [
-			new NamedType(
-				Collection::class,
-				new Collection([
-					PrimitiveType::integer(),
-					new NamedType(DateTime::class),
-				])
-			),
+			new NamedType(Collection::class, [
+				PrimitiveType::integer(),
+				new NamedType(DateTime::class),
+			]),
 			new Collection([new DateTime('2020-01-01 00:00:00')]),
 			<<<'JSON'
 				[
@@ -165,12 +161,9 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'ClassStub with all fields' => [
-			new NamedType(
-				ClassStub::class,
-				new Collection([
-					new NamedType(DateTime::class),
-				])
-			),
+			new NamedType(ClassStub::class, [
+				new NamedType(DateTime::class),
+			]),
 			new ClassStub(
 				1,
 				new NestedStub(),
@@ -218,9 +211,9 @@ class JsonSerializationTest extends TestCase
 		yield 'ClassStub with empty optional and null nullable' => [
 			new NamedType(
 				ClassStub::class,
-				new Collection([
+				[
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			new ClassStub(
 				1,
@@ -249,9 +242,7 @@ class JsonSerializationTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider deserializesProvider
-	 */
+	#[DataProvider('deserializesProvider')]
 	public function testDeserializes(string|Type $type, mixed $expectedData, string $serialized): void
 	{
 		$adapter = $this->serializer()->adapter(JsonTypeAdapter::class, $type);
@@ -372,10 +363,10 @@ class JsonSerializationTest extends TestCase
 		yield 'Collection of DateTime' => [
 			new NamedType(
 				Collection::class,
-				new Collection([
+				[
 					PrimitiveType::integer(),
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			new Collection([new DateTime('2020-01-01 00:00:00')]),
 			<<<'JSON'
@@ -388,9 +379,9 @@ class JsonSerializationTest extends TestCase
 		yield 'ClassStub with all fields' => [
 			new NamedType(
 				ClassStub::class,
-				new Collection([
+				[
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			new ClassStub(
 				1,
@@ -439,9 +430,9 @@ class JsonSerializationTest extends TestCase
 		yield 'ClassStub with empty optional and null nullable' => [
 			new NamedType(
 				ClassStub::class,
-				new Collection([
+				[
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			new ClassStub(
 				1,
@@ -468,12 +459,9 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'ClassStub with the least default fields' => [
-			new NamedType(
-				ClassStub::class,
-				new Collection([
-					new NamedType(DateTime::class),
-				])
-			),
+			new NamedType(ClassStub::class, [
+				new NamedType(DateTime::class),
+			]),
 			new ClassStub(
 				1,
 				new NestedStub(),
@@ -517,9 +505,7 @@ class JsonSerializationTest extends TestCase
 		];
 	}
 
-	/**
-	 * @dataProvider deserializesWithAnExceptionProvider
-	 */
+	#[DataProvider('deserializesWithAnExceptionProvider')]
 	public function testDeserializesWithAnException(Throwable $expectedException, string|Type $type, string $serialized): void
 	{
 		$adapter = $this->serializer()->adapter(JsonTypeAdapter::class, $type);
@@ -583,16 +569,18 @@ class JsonSerializationTest extends TestCase
 				JSON,
 		];
 
-		yield 'DateTime' => [
-			new Exception('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database'),
-			DateTime::class,
-			<<<'JSON'
-				"2020 dasd"
-				JSON,
-		];
+		if (version_compare(PHP_VERSION, '8.3', '>=')) {
+			yield 'DateTime' => [
+				new DateMalformedStringException('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database'),
+				DateTime::class,
+				<<<'JSON'
+					"2020 dasd"
+					JSON,
+			];
+		}
 
 		yield 'backed enum type' => [
-			new UnexpectedTypeException(true, new UnionType(new Collection([PrimitiveType::string(), PrimitiveType::integer()]))),
+			new UnexpectedTypeException(true, new UnionType([PrimitiveType::string(), PrimitiveType::integer()])),
 			BackedEnumStub::class,
 			<<<'JSON'
 				true
@@ -608,7 +596,7 @@ class JsonSerializationTest extends TestCase
 		];
 
 		yield 'value enum type' => [
-			new UnexpectedTypeException(true, new UnionType(new Collection([PrimitiveType::string(), PrimitiveType::integer()]))),
+			new UnexpectedTypeException(true, new UnionType([PrimitiveType::string(), PrimitiveType::integer()])),
 			ValueEnumStub::class,
 			<<<'JSON'
 				true
@@ -623,15 +611,17 @@ class JsonSerializationTest extends TestCase
 				JSON,
 		];
 
-		yield 'array of DateTime #1' => [
-			new CollectionItemMappingException(0, new Exception('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database')),
-			PrimitiveType::array(
-				new NamedType(DateTime::class)
-			),
-			<<<'JSON'
-				["2020 dasd"]
-				JSON,
-		];
+		if (version_compare(PHP_VERSION, '8.3', '>=')) {
+			yield 'array of DateTime #1' => [
+				new CollectionItemMappingException(0, new DateMalformedStringException('Failed to parse time string (2020 dasd) at position 5 (d): The timezone could not be found in the database')),
+				PrimitiveType::array(
+					new NamedType(DateTime::class)
+				),
+				<<<'JSON'
+					["2020 dasd"]
+					JSON,
+			];
+		}
 
 		yield 'array of DateTime #2' => [
 			new CollectionItemMappingException(1, new UnexpectedTypeException(null, PrimitiveType::string())),
@@ -660,10 +650,10 @@ class JsonSerializationTest extends TestCase
 			new CollectionItemMappingException(0, new UnexpectedTypeException(null, PrimitiveType::string())),
 			new NamedType(
 				Collection::class,
-				new Collection([
+				[
 					PrimitiveType::integer(),
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			<<<'JSON'
 				[null]
@@ -677,10 +667,10 @@ class JsonSerializationTest extends TestCase
 			]),
 			new NamedType(
 				Collection::class,
-				new Collection([
+				[
 					PrimitiveType::integer(),
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			<<<'JSON'
 				[null, null]
@@ -691,9 +681,9 @@ class JsonSerializationTest extends TestCase
 			new PropertyMappingException('primitive', new UnexpectedTypeException('1', PrimitiveType::integer())),
 			new NamedType(
 				ClassStub::class,
-				new Collection([
+				[
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			<<<'JSON'
 				{
@@ -711,9 +701,9 @@ class JsonSerializationTest extends TestCase
 			new PropertyMappingException('nested.Field', new UnexpectedTypeException(123, PrimitiveType::string())),
 			new NamedType(
 				ClassStub::class,
-				new Collection([
+				[
 					new NamedType(DateTime::class),
-				])
+				]
 			),
 			<<<'JSON'
 				{
